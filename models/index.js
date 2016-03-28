@@ -1,6 +1,6 @@
 'use strict';
 let mongoose = require('mongoose');
-mongoose.connect(process.en.MONG_URI);
+mongoose.connect(/*process.env.MONG_URI || */'mongodb://localhost/db');
 let models = {};
 
 require('./session')(mongoose, models);
