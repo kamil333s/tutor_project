@@ -17,6 +17,7 @@ let auth = require('./lib/authenticate')
 
 app.use(bodyParser.json());
 
+
 let publicRouter = express.Router();
 require('./routes/login')(publicRouter);
 app.use(publicRouter);
@@ -37,7 +38,7 @@ app.post('/sessions', (req, res) => {
 })
 
 app.get('/sessions', (req, res) => {
-  // Displays current queue  
+  // Displays current queue
   Session.find({}, (err, list) => {
     if (err) {
       res.json({error: err})
@@ -48,7 +49,7 @@ app.get('/sessions', (req, res) => {
 
 
 app.delete('/sessions/:id', (req, res) => {
-  // Delete a session from the queue  
+  // Delete a session from the queue
   Session.findById(req.params.id, (err, user) => {
     if (err) return res.send(err);
     Session.remove((err, user) => {
@@ -69,10 +70,10 @@ app.get('/admin', (req, res) => {
     Table.find({}, (err, list) => {
       if (err) {
         res.json({error: err})
-      }// if 
+      }// if
       defaults.table = list
       res.json(defaults);
-    });    
+    });
   });
 })
 
@@ -115,18 +116,24 @@ app.delete('/admin', (req, res) => {
 })
 
 
-app.post('/setup', auth, (req, res) => {
-  // Add a user to the database 
+app.post('/users', (req, res) => {
+  // Add a user to the database
   // POST with body {"name" : "kevin", "password" : "hashedPW", "admin" : "True"}
-  var newUser = new User(req.body);
-  newUser.save((err, user) => {
-    if (err) {
-      console.log('err: ', err)
-      console.log(typeof(err))
-      res.json(err.toString())
-    } else {
-    res.json({'User created: ': user});
+  User.findOne(req.body.name, (err, user) => {
+    if(err) throw err;
+    if(user) {
+      return res.json({message: 'User already exsit'});
     }
+    var newUser = new User(req.body);
+    newUser.save((err, user) => {
+      if (err) {
+        // console.log('err: ', err)
+        // console.log(typeof(err))
+        return res.json(err.toString());
+      } else {
+      return res.json({message: 'New user created'});
+      }
+    });
   });
 
 })
