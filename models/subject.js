@@ -4,5 +4,5 @@ module.exports = (mongoose, models) => {
     course: String
   });
   let Subject = mongoose.models('Subject', subjectSchema);
-  module.Subject = Subject;
+  models.Subject = Subject;
 }

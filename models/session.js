@@ -7,5 +7,5 @@ module.exports = (mongoose, models) => {
     table: String
   });
   let Session = mongoose.model('Session', sessionSchema);
-  module.Session = Session;
+  models.Session = Session;
 }
