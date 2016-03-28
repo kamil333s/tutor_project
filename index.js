@@ -119,21 +119,15 @@ app.delete('/admin', (req, res) => {
 app.post('/users', (req, res) => {
   // Add a user to the database
   // POST with body {"name" : "kevin", "password" : "hashedPW", "admin" : "True"}
-  User.findOne(req.body.name, (err, user) => {
-    if(err) throw err;
-    if(user) {
-      return res.json({message: 'User already exsit'});
+  var newUser = new User(req.body);
+  newUser.save((err, user) => {
+    if (err) {
+      console.log('err: ', err)
+      console.log(typeof(err))
+      res.json(err.toString())
+    } else {
+    res.json({message: 'New user created'});
     }
-    var newUser = new User(req.body);
-    newUser.save((err, user) => {
-      if (err) {
-        // console.log('err: ', err)
-        // console.log(typeof(err))
-        return res.json(err.toString());
-      } else {
-      return res.json({message: 'New user created'});
-      }
-    });
   });
 
 })
