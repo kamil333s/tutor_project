@@ -5,7 +5,7 @@ let models = {};
 
 require('./session')(mongoose, models);
 require('./subject')(mongoose, models);
-require('./tutor')(mongoose, models);
+require('./user')(mongoose, models);
 require('./table')(mongoose, models);
 
 module.exports = models;

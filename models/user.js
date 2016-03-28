@@ -1,10 +1,10 @@
 'use strict';
 module.exports = (mongoose, models) => {
-  let tutorSchema = mongoose.Schema({
+  let userSchema = mongoose.Schema({
     name: String,
     password: String,
     admin: Boolean
   });
-  let Tutor = mongoose.models('Tutor', tutorSchema);
-  models.Tutor = Tutor;
+  let User = mongoose.models('User', userSchema);
+  models.User = User;
 }
