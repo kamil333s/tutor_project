@@ -76,15 +76,37 @@ app.get('/admin', (req, res) => {
   });
 })
 
-app.post('/tables', (req, res) => {
+app.post('/admin/tables', (req, res) => {
+  // Create tables
+  Table.count({}, (err, tables) => {
+    console.log("Count: ", tables)
+    if (err) {
+      return res.send(err);
+    } else {
+      if (tables == 0) {
+        var newTable = new Table({'tables': req.body.tables})
+        newTable.save((err, table) => {
+          if (err) {
+            console.log('err: ', err)
+            console.log(typeof(err))
+            res.json(err.toString())
+          } else {
+            res.json({'Tables created: ': table});
+          }// if (err)
+        })// save
+      } else {
+        res.send('Tables already exists!')
+      }// if (tables ==0)
+    }// if (err)
+  })// count
+})// post
 
-  Tables.findByIdAndUpdate(req.params.id, { password: req.body.password }, (err, user) => {
-    if (err) return res.send(err);
-    console.log('Updated: ', user  );
-    res.json(user);
-  });
 
-})
+//     console.log('Updated: ', user  );
+//     res.json(user);
+//   });
+
+// })
 app.put('/admin', (req, res) => {
 
 })
@@ -93,7 +115,7 @@ app.delete('/admin', (req, res) => {
 })
 
 
-app.post('/setup', (req, res) => {
+app.post('/setup', auth, (req, res) => {
   // Add a user to the database 
   // POST with body {"name" : "kevin", "password" : "hashedPW", "admin" : "True"}
   var newUser = new User(req.body);

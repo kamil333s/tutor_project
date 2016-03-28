@@ -1,9 +1,11 @@
 'use strict';
 
-let User = require('../models/user');
+let models = require('../models');
+let User = models.User
 
 module.exports = (router) => {
-  router.post('/login', (req, res) => {
+    router.post('/login', (req, res) => {
+
     console.log(req.headers.authorization);
     let authorizationArray = req.headers.authorization.split(' ');
     let method = authorizationArray[0];
