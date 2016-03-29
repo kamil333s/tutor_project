@@ -11,8 +11,6 @@ let Subject = models.Subject;
 let Table = models.Table;
 let auth = require('./lib/authenticate');
 
-
-
 app.use(bodyParser.json());
 
 let publicRouter = express.Router();
@@ -55,8 +53,6 @@ app.post('/sessions', (req, res) => {
       var newSession = new Session(sessionObj);
       newSession.save((err, session) => {
         if (err) {
-          console.log('err: ', err);
-          console.log(typeof(err));
           res.json(err.toString());
         } else {
           res.json(session);
@@ -72,30 +68,41 @@ app.get('/sessions', (req, res) => {
   Session.find({timeOut:null}, (err, sessions) => {
     if (err) {
       res.json({error: err});
-    }
+    }// if
     res.json(sessions);
-  });
-});
+  });// find
+});// get
 
 // Delete a session
 app.delete('/sessions/:id', (req, res) => {
   // Delete a session from the queue  
   Session.findById(req.params.id, (err, user) => {
-    if (err) return res.send(err);
+    if (err) {
+      res.send(err);
+    }// if 
     Session.remove((err, user) => {
       res.json({'message': 'session removed'});
-    });
-  });
-});
-
-
-
+    });// remove
+  });// findById
+});// delete
 
 /*
 ========================
 ADMIN====================
 ========================
 */
+
+app.put('/admin', (req, res) => {
+  // Clears the queue
+   
+  Session.find({timeOut:null}, (err, sessions) => {
+    if (err) {
+      res.json({error: err});
+    }// if
+    res.json(sessions);
+  });// find
+
+});
 
 app.get('/admin', (req, res) => {
   // displays all Subjects and Tables
@@ -111,9 +118,9 @@ app.get('/admin', (req, res) => {
       }// if 
       defaults.tables = list[0].table;
       res.json(defaults);
-    });    
-  });
-});
+    });// Table.find  
+  });// Subject.find
+});// get
 
 
 /*
@@ -129,8 +136,8 @@ app.get('/admin/subjects', (req, res) => {
       res.json({error: err});
     }// if 
     res.json(list);
-  });    
-});
+  }); // find   
+});// get
 
 // Deletes all subjects
 app.delete('/admin/subjects', (req, res) => {
@@ -139,8 +146,8 @@ app.delete('/admin/subjects', (req, res) => {
       res.send(err);
     } else {
       res.send('Subjects deleted!');
-    }
-  });
+    }// if
+  });// remove
 });// delete
 
 // Creates the list of subjects
@@ -173,11 +180,11 @@ app.put('/admin/subjects/:id', (req, res) => {
   Subject.findByIdAndUpdate(req.params.id, { subject: req.body.subject }, (err, subject) => {
     if (err) {
       return res.send(err);
-    }
+    } // if
     console.log('Updated: ', subject);
     res.json(subject);
-  });
-});
+  });// findByIdAndUpdate
+});// put
 
 /*
 =================
@@ -192,8 +199,8 @@ app.get('/admin/tables', (req, res) => {
       res.json({error: err});
     }// if 
     res.json(list);
-  });    
-});
+  }); // find   
+}); // get
 
 // Deletes all tables
 app.delete('/admin/tables', (req, res) => {
@@ -202,16 +209,14 @@ app.delete('/admin/tables', (req, res) => {
       res.send(err);
     } else {
       res.send('Tables deleted!');
-    }
-  });
-});// delete
+    } // if
+  }); // remove
+}); // delete
 
 // Creates the list of tables
 app.post('/admin/tables', (req, res) => {
   // Create tables
-  console.log(req.body);
   Table.count({}, (err, tables) => {
-    console.log('Count: ', tables);
     if (err) {
       return res.send(err);
     } else {
@@ -219,8 +224,6 @@ app.post('/admin/tables', (req, res) => {
         var newTable = new Table({'table': req.body.table});
         newTable.save((err, table) => {
           if (err) {
-            console.log('err: ', err);
-            console.log(typeof(err));
             res.json(err.toString());
           } else {
             res.json({'Tables created: ': table});
@@ -238,15 +241,11 @@ app.put('/admin/tables/:id', (req, res) => {
   Table.findByIdAndUpdate(req.params.id, { table: req.body.table }, (err, table) => {
     if (err) {
       return res.send(err);
-    }
-    console.log('Updated: ', table);
+    } // if
     res.json(table);
-  });
-});
+  }); //findByIdAndUpdate
+}); //put
 
-app.delete('/admin', (req, res) => {
-  // Clears the queue
-});
 
 
 // Add a user to the database 
@@ -255,60 +254,14 @@ app.post('/setup', auth, (req, res) => {
   var newUser = new User(req.body);
   newUser.save((err, user) => {
     if (err) {
-      console.log('err: ', err);
-      console.log(typeof(err));
       res.json(err.toString());
     } else {
       res.json({'User created: ': user});
-    }
-  });
-});
+    }// if
+  }); // save
+});// post
 
 app.listen(3000, () => {
   console.log('Server started on 3000');
 });
 
-
-/*
-app.post('/users', (req, res) => {
-  var newUser = new User(req.body);
-  newUser.save((err, user) => {
-    if (err) {
-      console.log('err: ', err)
-      console.log(typeof(err))
-      res.json(err.toString())
-    } else {
-    res.json(user);
-    }
-  });
-});
-
-app.get('/users', auth, (req, res) => {
-  User.find({}, (err, list) => {
-    if (err) {
-      res.json({error: err})
-    }
-    res.json(list);
-  });
-});
-
-app.put('/users/:id', (req, res) => {
-  User.findByIdAndUpdate(req.params.id, { password: req.body.password }, (err, user) => {
-    if (err) return res.send(err);
-    console.log('Updated: ', user  );
-    res.json(user);
-  });
-});
-
-app.delete('/users/:id', auth, (req, res) => {
-  User.findById(req.params.id, (err, user) => {
-    if (err) return res.send(err);
-    user.remove((err, user) => {
-      res.json({'message': 'user removed'});
-    });
-  });
-});
-
-
-
-*/
