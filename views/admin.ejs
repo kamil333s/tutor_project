@@ -4,32 +4,36 @@
     <meta charset="utf-8">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.2/jquery.min.js"></script>
     <title>Admin</title>
+    <style media="screen">
+      body {
+      }
+    </style>
   </head>
   <body>
     <h1>Admin Page</h1>
 
-      <h2>Active Subjects</h2>
+      <h2>Active Subjects</h2><button id="subjects"> Delete current subjects</button>
       <ul id="subDiv">
 
       </ul>
-      <button id="subjects"> Delete current subjects</button>
 
-      <h2>Active Tables</h2>
+
+      <h2>Active Tables</h2><button id="tables">Delete current tables</button>
       <ul id="tableDiv">
 
       </ul>
-      <button id="tables">Delete current tables</button>
 
 
 
-      <h3>Enter Subject:</h3>
-      <input type="text" id="inputSubjects">
+
+
+      Enter Subject: <input type="text" id="inputSubjects">
       <button id="postSubjects">SUBMIT</button>
-      <button id="updateSubjects">UPDATE</button>
+      <button id="updateSubjects">UPDATE</button><br><br>
 
 
-      <h3>Enter Table:</h3>
-      <input type="text" id="inputTables">
+
+      Enter Table: <input type="text" id="inputTables">
       <button id="postTables">SUBMIT</button>
       <button id="updateTables">UPDATE</button>
 
@@ -38,11 +42,11 @@
 
       </ul>
 
-      <h3>Enter Username:</h3>
-      <input type="text" id="inputUser">
-      <h3>Enter Password:</h3>
-      <input type="text" id="inputPassword">
-      <button id="postSubjects">ADD</button>
+
+      Enter Username: <input type="text" id="inputUser">
+      Enter Password: <input type="text" id="inputPassword">
+      Admin: <input type="checkbox" id="inputAdmin" value="true">
+      <button id="postUser">ADD</button>
 
 
 
@@ -69,7 +73,7 @@
 
     $('#postSubjects').on('click', function(e) {
       e.preventDefault();
-      var text = $('#inputSubjects').val().split(' ');
+      var text = $('#inputSubjects').val().split(',');
       console.log('Contents: '+text);
       $.ajax({url :'/admin/subjects', method : 'POST', data: {subjects: text}}).done(function(data) {
         console.log(data);
@@ -79,9 +83,24 @@
 
     $('#postTables').on('click', function(e) {
       e.preventDefault();
-      var text = $('#inputTables').val().split(' ');
+      var text = $('#inputTables').val().split(',');
       console.log('Contents: '+text);
       $.ajax({url :'/admin/tables', method : 'POST', data: {tables: text}}).done(function(data) {
+        console.log(data);
+        location.reload();
+      })
+    })
+
+    $('#postUser').on('click', function(e) {
+      e.preventDefault();
+      var name = $('#inputUser').val().trim();
+      var password = $('#inputPassword').val().trim();
+      var admin = false;
+      if ($('#inputAdmin').prop('checked')) {
+        admin = true;
+      }
+
+      $.ajax({url :'/users', method : 'POST', data: {name:name, password:password, admin:admin}}).done(function(data) {
         console.log(data);
         location.reload();
       })
@@ -128,6 +147,9 @@
       })
 
       $.ajax('/users').done(function(data) {
+        data.forEach((obj) => {
+          $('#userDiv').append('<li>'+obj.name+'</li>')
+        })
 
         console.log(data);
       })
