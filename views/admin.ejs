@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.2/jquery.min.js"></script>
+    <title>Admin</title>
+  </head>
+  <body>
+    <h1>Admin Page</h1>
+
+      <h2>Active Subjects</h2>
+      <ul id="subDiv">
+
+      </ul>
+      <button id="subjects"> Delete current subjects</button>
+
+      <h2>Active Tables</h2>
+      <ul id="tableDiv">
+
+      </ul>
+      <button id="tables">Delete current tables</button>
+
+
+
+      <h3>Enter Subject:</h3>
+      <input type="text" id="inputSubjects">
+      <button id="postSubjects">SUBMIT</button>
+      <button id="updateSubjects">UPDATE</button>
+
+
+      <h3>Enter Table:</h3>
+      <input type="text" id="inputTables">
+      <button id="postTables">SUBMIT</button>
+      <button id="updateTables">UPDATE</button>
+
+      <h2>Active Users</h2>
+      <ul id="userDiv">
+
+      </ul>
+
+      <h3>Enter Username:</h3>
+      <input type="text" id="inputUser">
+      <h3>Enter Password:</h3>
+      <input type="text" id="inputPassword">
+      <button id="postSubjects">ADD</button>
+
+
+
+
+
+  <script>
+  $(document).ready(function(){
+    var subjectsId;
+    var tablesId;
+    $('#subjects').on('click', function(e) {
+      e.preventDefault();
+      $.ajax({url :'/admin/subjects', method : 'DELETE'}).done(function(data) {
+        $('#subDiv').empty();
+      })
+    })
+
+    $('#tables').on('click', function(e) {
+      e.preventDefault();
+      $.ajax({url :'/admin/tables', method : 'DELETE'}).done(function(data) {
+        $('#tableDiv').empty();
+      })
+    })
+
+
+    $('#postSubjects').on('click', function(e) {
+      e.preventDefault();
+      var text = $('#inputSubjects').val().split(' ');
+      console.log('Contents: '+text);
+      $.ajax({url :'/admin/subjects', method : 'POST', data: {subjects: text}}).done(function(data) {
+        console.log(data);
+        location.reload();
+      })
+    })
+
+    $('#postTables').on('click', function(e) {
+      e.preventDefault();
+      var text = $('#inputTables').val().split(' ');
+      console.log('Contents: '+text);
+      $.ajax({url :'/admin/tables', method : 'POST', data: {tables: text}}).done(function(data) {
+        console.log(data);
+        location.reload();
+      })
+    })
+
+    $('#updateSubjects').on('click', function(e) {
+      e.preventDefault();
+      var text = $('#inputSubjects').val().split(' ');
+      console.log('Contents: '+text);
+      $.ajax({url :'/admin/subjects/'+subjectsId, method : 'PUT', data: {subjects: text}}).done(function(data) {
+        console.log(data)
+        location.reload();
+      ;})
+    })
+
+    $('#updateTables').on('click', function(e) {
+      e.preventDefault();
+      var text = $('#inputTables').val().split(' ');
+      console.log('Contents: '+text);
+      $.ajax({url :'/admin/tables/'+tablesId, method : 'PUT', data: {tables: text}}).done(function(data) {
+        console.log(data);
+        location.reload();
+      })
+    })
+
+
+
+      $.ajax('/admin/subjects').done(function(data) {
+        data[0].subjects.forEach(function(sub) {
+          $('#subDiv').append('<li>'+sub+'</li>');
+        })
+
+        subjectsId = data[0]._id;
+      })
+
+
+
+      $.ajax('/admin/tables').done(function(data) {
+        data[0].tables.forEach(function(tab) {
+          $('#tableDiv').append('<li>'+tab+'</li>');
+        })
+
+        tablesId = data[0]._id;
+      })
+
+      $.ajax('/users').done(function(data) {
+
+        console.log(data);
+      })
+
+
+
+  });
+  </script>
+  </body>
+</html>

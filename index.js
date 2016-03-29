@@ -11,14 +11,17 @@ let Subject = models.Subject;
 let Table = models.Table;
 let auth = require('./lib/authenticate');
 
+
+app.set('view engine', 'ejs');
+
 // The extended config object key now needs
 // to be explicitly passed, since it now has no default value.
 app.use(bodyParser.urlencoded({
   extended: true
 }));
 
+
 app.use(bodyParser.json());
-app.use(express.static('public'));
 
 let publicRouter = express.Router();
 require('./routes/login')(publicRouter);
@@ -111,6 +114,7 @@ app.put('/admin', (req, res) => {
     }// if
     res.json(sessions);
   });// find
+
 });
 
 app.get('/admin', (req, res) => {
@@ -123,10 +127,10 @@ app.get('/admin', (req, res) => {
     defaults.subjects = list;
     Table.find({}, (err, list) => {
       if (err) {
-        res.json({error: err});
+        res.json({error: err})
       }// if
-      defaults.tables = list[0].table;
-      res.json(defaults);
+      defaults.tables = list;
+      res.render('admin');
     });// Table.find
   });// Subject.find
 });// get
@@ -140,6 +144,7 @@ SUBJECTS============
 
 // Display the subjects
 app.get('/admin/subjects', (req, res) => {
+  console.log(req.method);
   Subject.find({}, (err, list) => {
     if (err) {
       res.json({error: err});
@@ -162,8 +167,9 @@ app.delete('/admin/subjects', (req, res) => {
 // Creates the list of subjects
 app.post('/admin/subjects', (req, res) => {
   // Create subjects
-  // console.log(req.body);
+  console.log(req.body);
   Subject.count({}, (err, subjects) => {
+
     if (err) {
       return res.send(err);
     } else {
@@ -186,15 +192,23 @@ app.post('/admin/subjects', (req, res) => {
 
 // Modify the list of subjects
 app.put('/admin/subjects/:id', (req, res) => {
-  Subject.findByIdAndUpdate(req.params.id, { subject: req.body.subject }, (err, subject) => {
+  console.log(req.body);
+  Subject.findById(req.params.id, (err, subject) => {
     if (err) {
       return res.send(err);
     } // if
     // console.log('Updated: ', subject);
-    res.json({
-      message: 'Subject updated',
-      data: subject
+    req.body.subjects.forEach(function(sub) {
+      subject.subjects.push(sub);
+    })
+    subject.save(function(err) {
+      if(err) return res.send(err);
+      res.json({
+        message: 'Subject updated',
+        data: subject
+      });
     });
+
   });// findByIdAndUpdate
 });// put
 
@@ -227,18 +241,19 @@ app.delete('/admin/tables', (req, res) => {
 
 // Creates the list of tables
 app.post('/admin/tables', (req, res) => {
+  console.log(req.body.tables);
   // Create tables
   Table.count({}, (err, tables) => {
     if (err) {
       return res.send(err);
     } else {
       if (tables == 0) {
-        var newTable = new Table({'table': req.body.table});
+        var newTable = new Table(req.body);
         newTable.save((err, table) => {
           if (err) {
             res.json(err.toString());
           } else {
-            res.json({data: table});
+            res.json(table);
           }// if (err)
         });// save
       } else {
@@ -250,16 +265,25 @@ app.post('/admin/tables', (req, res) => {
 
 // Modify the list of tables
 app.put('/admin/tables/:id', (req, res) => {
-  Table.findByIdAndUpdate(req.params.id, { table: req.body.table }, (err, table) => {
+  Table.findById(req.params.id, (err, table) => {
     if (err) {
       return res.send(err);
     } // if
-    res.json({
-      message: 'Table updated',
-      data: table
-    });
+    req.body.tables.forEach(function(tab) {
+      table.tables.push(tab);
+    })
+    table.save(function(err) {
+      if(err) return res.send(err);
+      res.json({
+        message: 'Table updated',
+        data: table
+      });
+    })
+
   }); //findByIdAndUpdate
 }); //put
+
+
 
 // Add a user to the database
 app.post('/users', (req, res) => {
@@ -274,9 +298,15 @@ app.post('/users', (req, res) => {
   }); // save
 });// post
 
-app.use(function(req, res, next) {
-  res.status(404).send("Sorry can't find that!");
-});
+// Get all current users
+app.get('/users', (req, res) => {
+  User.find({}, (err, users) => {
+    if(err) return res.send(err);
+    res.json(users);
+  })
+});// get
+
+
 
 app.listen(3000, () => {
   console.log('Server started on 3000');
