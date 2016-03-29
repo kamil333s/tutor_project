@@ -64,7 +64,7 @@ app.post('/sessions', (req, res) => {
 
 // Display all open sessions
 app.get('/sessions', (req, res) => {
-  // Displays current queue  
+  // Displays current queue
   Session.find({timeOut:null}, (err, sessions) => {
     if (err) {
       res.json({error: err});
@@ -75,11 +75,11 @@ app.get('/sessions', (req, res) => {
 
 // Delete a session
 app.delete('/sessions/:id', (req, res) => {
-  // Delete a session from the queue  
+  // Delete a session from the queue
   Session.findById(req.params.id, (err, user) => {
     if (err) {
       res.send(err);
-    }// if 
+    }// if
     Session.remove((err, user) => {
       res.json({'message': 'session removed'});
     });// remove
@@ -94,7 +94,7 @@ ADMIN====================
 
 app.put('/admin', (req, res) => {
   // Clears the queue
-   
+
   Session.find({timeOut:null}, (err, sessions) => {
     if (err) {
       res.json({error: err});
@@ -115,10 +115,10 @@ app.get('/admin', (req, res) => {
     Table.find({}, (err, list) => {
       if (err) {
         res.json({error: err});
-      }// if 
+      }// if
       defaults.tables = list[0].table;
       res.json(defaults);
-    });// Table.find  
+    });// Table.find
   });// Subject.find
 });// get
 
@@ -134,9 +134,9 @@ app.get('/admin/subjects', (req, res) => {
   Subject.find({}, (err, list) => {
     if (err) {
       res.json({error: err});
-    }// if 
+    }// if
     res.json(list);
-  }); // find   
+  }); // find
 });// get
 
 // Deletes all subjects
@@ -197,9 +197,9 @@ app.get('/admin/tables', (req, res) => {
   Table.find({}, (err, list) => {
     if (err) {
       res.json({error: err});
-    }// if 
+    }// if
     res.json(list);
-  }); // find   
+  }); // find
 }); // get
 
 // Deletes all tables
@@ -248,15 +248,15 @@ app.put('/admin/tables/:id', (req, res) => {
 
 
 
-// Add a user to the database 
-app.post('/setup', auth, (req, res) => {
+// Add a user to the database
+app.post('/users', (req, res) => {
   // POST with body {"name" : "kevin", "password" : "hashedPW", "admin" : "True"}
   var newUser = new User(req.body);
   newUser.save((err, user) => {
     if (err) {
       res.json(err.toString());
     } else {
-      res.json({'User created: ': user});
+      res.json({message:'New user created'});
     }// if
   }); // save
 });// post
@@ -264,4 +264,3 @@ app.post('/setup', auth, (req, res) => {
 app.listen(3000, () => {
   console.log('Server started on 3000');
 });
-

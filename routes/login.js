@@ -6,7 +6,7 @@ let User = models.User;
 module.exports = (router) => {
   router.post('/login', (req, res) => {
 
-    console.log(req.headers.authorization);
+    // console.log(req.headers.authorization);
     let authorizationArray = req.headers.authorization.split(' ');
     let method = authorizationArray[0];
     let base64ed = authorizationArray[1];
@@ -18,9 +18,9 @@ module.exports = (router) => {
       if (user.length == 0) {
         return res.json({status: 'failure'});
       }
-      console.log('user:', user);
+      // console.log('user:', user);
       let valid = user[0].compareHash(password);
-      console.log('Valid: ', valid);
+      // console.log('Valid: ', valid);
       if (!valid) {
         return res.json({status: 'failure'});
       }
@@ -30,28 +30,3 @@ module.exports = (router) => {
     }) ;
   });
 };
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
