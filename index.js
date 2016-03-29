@@ -12,8 +12,6 @@ let Table = models.Table;
 let auth = require('./lib/authenticate');
 
 
-// let DB_PORT = process.env.MONGOLAB_URI || 'mongodb://localhost/db';
-// mongoose.connect(DB_PORT);
 
 app.use(bodyParser.json());
 
@@ -43,21 +41,30 @@ app.put('/sessions/:id', (req, res) => {
 
 // Create new session in queue- POST with body {"table" : "17", "subject" : "Algebra 1"}
 app.post('/sessions', (req, res) => {
-  var d = new Date();
-  var sessionObj = req.body;
-  sessionObj.timeIn = d;
-  sessionObj.timeOut = '';
-  var newSession = new Session(sessionObj);
-  newSession.save((err, session) => {
+  Session.count({table:req.body.table, subject:req.body.subject, timeOut:null}, (err, sessions) => {
     if (err) {
-      console.log('err: ', err);
-      console.log(typeof(err));
-      res.json(err.toString());
+      res.json({error: err});
+    }// if (err)
+    if (sessions > 0) {
+      res.json({message: 'You are already in the queue!'});
     } else {
-      res.json(session);
-    }
-  });
-});
+      var d = new Date();
+      var sessionObj = req.body;
+      sessionObj.timeIn = d;
+      sessionObj.timeOut = '';
+      var newSession = new Session(sessionObj);
+      newSession.save((err, session) => {
+        if (err) {
+          console.log('err: ', err);
+          console.log(typeof(err));
+          res.json(err.toString());
+        } else {
+          res.json(session);
+        }// if (err)
+      });// save
+    }// if (sessions > 0)
+  });// count
+});// post
 
 // Display all open sessions
 app.get('/sessions', (req, res) => {
@@ -98,7 +105,6 @@ app.get('/admin', (req, res) => {
       res.json({error: err});
     }// if
     defaults.subjects = list;
-
     Table.find({}, (err, list) => {
       if (err) {
         res.json({error: err});
@@ -147,15 +153,9 @@ app.post('/admin/subjects', (req, res) => {
     } else {
       if (subjects == 0) {
         var newSubject = new Subject();
-        newSubject.subject = req.body.subjects;
-        console.log('newSubject: ', newSubject);
-        console.log('req.body: ', req.body);
-        console.log('newSubject.subject: ', newSubject.subject);
-        console.log('req.body.subjects: ', req.body.subjects);
+        newSubject.subjects= req.body.subjects;
         newSubject.save((err, subject) => {
           if (err) {
-            console.log('err: ', err);
-            console.log(typeof(err));
             res.json(err.toString());
           } else {
             res.json(subject);
