@@ -32,7 +32,10 @@ app.put('/sessions/:id', (req, res) => {
       console.log(typeof(err));
       res.json(err.toString());
     } else {
-      res.json(session);
+      res.json({
+        message: 'Updated session',
+        data: session
+      });
     }
   });
 });
@@ -226,7 +229,7 @@ app.post('/admin/tables', (req, res) => {
           if (err) {
             res.json(err.toString());
           } else {
-            res.json({'Tables created: ': table});
+            res.json({data: table});
           }// if (err)
         });// save
       } else {
@@ -242,7 +245,10 @@ app.put('/admin/tables/:id', (req, res) => {
     if (err) {
       return res.send(err);
     } // if
-    res.json(table);
+    res.json({
+      message: 'Table updated',
+      data: table
+    });
   }); //findByIdAndUpdate
 }); //put
 
