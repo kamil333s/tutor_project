@@ -156,7 +156,7 @@ app.delete('/admin/subjects', (req, res) => {
 // Creates the list of subjects
 app.post('/admin/subjects', (req, res) => {
   // Create subjects
-  console.log(req.body);
+  // console.log(req.body);
   Subject.count({}, (err, subjects) => {
     if (err) {
       return res.send(err);
@@ -184,8 +184,11 @@ app.put('/admin/subjects/:id', (req, res) => {
     if (err) {
       return res.send(err);
     } // if
-    console.log('Updated: ', subject);
-    res.json(subject);
+    // console.log('Updated: ', subject);
+    res.json({
+      message: 'Subject updated',
+      data: subject
+    });
   });// findByIdAndUpdate
 });// put
 
