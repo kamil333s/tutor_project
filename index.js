@@ -110,7 +110,6 @@ app.put('/admin', (req, res) => {
     }// if
     res.json(sessions);
   });// find
-
 });
 
 app.get('/admin', (req, res) => {
@@ -261,8 +260,6 @@ app.put('/admin/tables/:id', (req, res) => {
   }); //findByIdAndUpdate
 }); //put
 
-
-
 // Add a user to the database
 app.post('/users', (req, res) => {
   // POST with body {"name" : "kevin", "password" : "hashedPW", "admin" : "True"}
@@ -275,6 +272,10 @@ app.post('/users', (req, res) => {
     }// if
   }); // save
 });// post
+
+app.use(function(req, res, next) {
+  res.status(404).send("Sorry can't find that!");
+});
 
 app.listen(3000, () => {
   console.log('Server started on 3000');
