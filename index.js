@@ -13,6 +13,7 @@ let auth = require('./lib/authenticate');
 
 
 app.set('view engine', 'ejs');
+app.use(express.static('public'));
 
 // The extended config object key now needs
 // to be explicitly passed, since it now has no default value.

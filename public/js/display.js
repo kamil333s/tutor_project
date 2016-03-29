@@ -6,6 +6,7 @@
 var service = 'http://localhost:3000';
 
 $(document).ready(function(){
+
     $.ajax(
     {
         type: "GET",
@@ -18,8 +19,13 @@ $(document).ready(function(){
             var trHTML = '';
             
             for (var i=0; i < data.length;i++) {
-                delButton = '<button type="button" class="removeSession" id="' + data[i]._id + '">Remove</button>'
-                trHTML += '<tr><td>' + data[i].subject + '</td><td>' + data[i].table + '</td><td>' + delButton + '</td></tr>';
+                var delButton = '<button type="button" class="removeSession" id="' + data[i]._id + '">Remove</button>'
+                var d = new Date(data[i].timeIn);
+                var time = d.toTimeString().split(' ')[0];
+                trHTML += '<tr><td>' + data[i].subject + '</td><td>'
+                                                     + data[i].table     + '</td><td>' 
+                                                     + time                 + '</td><td>' 
+                                                     + delButton         + '</td></tr>';
             }// for
 
             $('#sessionList').append(trHTML);  
@@ -49,4 +55,5 @@ $(document).ready(function(){
             alert(msg.responseText);
         }// error
     });// ajax
+
 })// ready
