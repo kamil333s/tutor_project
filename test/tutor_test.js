@@ -50,47 +50,51 @@ describe('RESTful API', function() {
       })
   })
 
-  it ('should be able to create a session', function(done) {
-    chai.request('localhost:3000')
-      .post('/sessions')
-      .send({table : "17", subject : "Algebra 1"})
-      .end((err, res) => {
-        sessionsId = res.body._id;
-        expect(err).to.eql(null);
-        expect(res.body).to.have.property('_id');
-        done();
-      })
-  });
+  describe('Sessions routes', function() {
 
-  it ('should be able to get sessions', function(done) {
-    chai.request('localhost:3000')
-      .get('/sessions')
-      .end((err, res) => {
-        expect(err).to.eql(null);
-        expect(Array.isArray(res.body)).to.eql(true);
-        done();
-      })
-  });
+    it ('should be able to create a session', function(done) {
+      chai.request('localhost:3000')
+        .post('/sessions')
+        .send({table : "17", subject : "Algebra 1"})
+        .end((err, res) => {
+          sessionsId = res.body._id;
+          expect(err).to.eql(null);
+          expect(res.body).to.have.property('_id');
+          done();
+        })
+    });
 
-  it ('should be able to delete a session', function(done) {
-    chai.request('localhost:3000')
-      .put('/sessions/'+sessionsId)
-      .end((err, res) => {
-        expect(err).to.eql(null);
-        expect(res.body.message).to.eql('Updated session');
-        done();
-      })
-  });
+    it ('should be able to get sessions', function(done) {
+      chai.request('localhost:3000')
+        .get('/sessions')
+        .end((err, res) => {
+          expect(err).to.eql(null);
+          expect(Array.isArray(res.body)).to.eql(true);
+          done();
+        })
+    });
 
-  it ('should be able to delete a session', function(done) {
-    chai.request('localhost:3000')
-      .del('/sessions/'+sessionsId)
-      .end((err, res) => {
-        expect(err).to.eql(null);
-        expect(res.body.message).to.eql('session removed');
-        done();
-      })
-  });
+    it ('should be able to update a session', function(done) {
+      chai.request('localhost:3000')
+        .put('/sessions/'+sessionsId)
+        .end((err, res) => {
+          expect(err).to.eql(null);
+          expect(res.body.message).to.eql('Updated session');
+          done();
+        })
+    });
+
+    it ('should be able to delete a session', function(done) {
+      chai.request('localhost:3000')
+        .del('/sessions/'+sessionsId)
+        .end((err, res) => {
+          expect(err).to.eql(null);
+          expect(res.body.message).to.eql('session removed');
+          done();
+        })
+    });
+
+  })
 
   it ('should create a list ', function(done) {
     chai.request('localhost:3000')
