@@ -18,6 +18,7 @@ app.use(bodyParser.urlencoded({
 }));
 
 app.use(bodyParser.json());
+app.use(express.static('public'));
 
 let publicRouter = express.Router();
 require('./routes/login')(publicRouter);
