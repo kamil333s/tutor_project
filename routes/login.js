@@ -1,5 +1,5 @@
 'use strict';
-
+let cookieParser = require('cookie-parser');
 let models = require('../models');
 let User = models.User;
 
