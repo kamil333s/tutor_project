@@ -129,7 +129,7 @@ app.get('/admin', (req, res) => {
       if (err) {
         res.json({error: err})
       }// if
-      defaults.tables = list[0].table;
+      defaults.tables = list;
       res.render('admin');
     });// Table.find
   });// Subject.find
@@ -144,6 +144,7 @@ SUBJECTS============
 
 // Display the subjects
 app.get('/admin/subjects', (req, res) => {
+  console.log(req.method);
   Subject.find({}, (err, list) => {
     if (err) {
       res.json({error: err});
@@ -232,18 +233,19 @@ app.delete('/admin/tables', (req, res) => {
 
 // Creates the list of tables
 app.post('/admin/tables', (req, res) => {
+  console.log(req.body.tables);
   // Create tables
   Table.count({}, (err, tables) => {
     if (err) {
       return res.send(err);
     } else {
       if (tables == 0) {
-        var newTable = new Table({'table': req.body.table});
+        var newTable = new Table(req.body);
         newTable.save((err, table) => {
           if (err) {
             res.json(err.toString());
           } else {
-            res.json({data: table});
+            res.json(table);
           }// if (err)
         });// save
       } else {
