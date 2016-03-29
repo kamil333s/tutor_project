@@ -32,7 +32,10 @@ app.put('/sessions/:id', (req, res) => {
       console.log(typeof(err));
       res.json(err.toString());
     } else {
-      res.json(session);
+      res.json({
+        message: 'Updated session',
+        data: session
+      });
     }
   });
 });
@@ -64,7 +67,7 @@ app.post('/sessions', (req, res) => {
 
 // Display all open sessions
 app.get('/sessions', (req, res) => {
-  // Displays current queue  
+  // Displays current queue
   Session.find({timeOut:null}, (err, sessions) => {
     if (err) {
       res.json({error: err});
@@ -75,11 +78,11 @@ app.get('/sessions', (req, res) => {
 
 // Delete a session
 app.delete('/sessions/:id', (req, res) => {
-  // Delete a session from the queue  
+  // Delete a session from the queue
   Session.findById(req.params.id, (err, user) => {
     if (err) {
       res.send(err);
-    }// if 
+    }// if
     Session.remove((err, user) => {
       res.json({'message': 'session removed'});
     });// remove
@@ -94,7 +97,7 @@ ADMIN====================
 
 app.put('/admin', (req, res) => {
   // Clears the queue
-   
+
   Session.find({timeOut:null}, (err, sessions) => {
     if (err) {
       res.json({error: err});
@@ -115,10 +118,10 @@ app.get('/admin', (req, res) => {
     Table.find({}, (err, list) => {
       if (err) {
         res.json({error: err});
-      }// if 
+      }// if
       defaults.tables = list[0].table;
       res.json(defaults);
-    });// Table.find  
+    });// Table.find
   });// Subject.find
 });// get
 
@@ -134,9 +137,9 @@ app.get('/admin/subjects', (req, res) => {
   Subject.find({}, (err, list) => {
     if (err) {
       res.json({error: err});
-    }// if 
+    }// if
     res.json(list);
-  }); // find   
+  }); // find
 });// get
 
 // Deletes all subjects
@@ -153,7 +156,7 @@ app.delete('/admin/subjects', (req, res) => {
 // Creates the list of subjects
 app.post('/admin/subjects', (req, res) => {
   // Create subjects
-  console.log(req.body);
+  // console.log(req.body);
   Subject.count({}, (err, subjects) => {
     if (err) {
       return res.send(err);
@@ -181,8 +184,11 @@ app.put('/admin/subjects/:id', (req, res) => {
     if (err) {
       return res.send(err);
     } // if
-    console.log('Updated: ', subject);
-    res.json(subject);
+    // console.log('Updated: ', subject);
+    res.json({
+      message: 'Subject updated',
+      data: subject
+    });
   });// findByIdAndUpdate
 });// put
 
@@ -197,9 +203,9 @@ app.get('/admin/tables', (req, res) => {
   Table.find({}, (err, list) => {
     if (err) {
       res.json({error: err});
-    }// if 
+    }// if
     res.json(list);
-  }); // find   
+  }); // find
 }); // get
 
 // Deletes all tables
@@ -226,7 +232,7 @@ app.post('/admin/tables', (req, res) => {
           if (err) {
             res.json(err.toString());
           } else {
-            res.json({'Tables created: ': table});
+            res.json({data: table});
           }// if (err)
         });// save
       } else {
@@ -242,21 +248,24 @@ app.put('/admin/tables/:id', (req, res) => {
     if (err) {
       return res.send(err);
     } // if
-    res.json(table);
+    res.json({
+      message: 'Table updated',
+      data: table
+    });
   }); //findByIdAndUpdate
 }); //put
 
 
 
-// Add a user to the database 
-app.post('/setup', auth, (req, res) => {
+// Add a user to the database
+app.post('/users', (req, res) => {
   // POST with body {"name" : "kevin", "password" : "hashedPW", "admin" : "True"}
   var newUser = new User(req.body);
   newUser.save((err, user) => {
     if (err) {
       res.json(err.toString());
     } else {
-      res.json({'User created: ': user});
+      res.json({message:'New user created'});
     }// if
   }); // save
 });// post
@@ -264,4 +273,3 @@ app.post('/setup', auth, (req, res) => {
 app.listen(3000, () => {
   console.log('Server started on 3000');
 });
-
