@@ -298,6 +298,14 @@ app.post('/users', (req, res) => {
   }); // save
 });// post
 
+// Get all current users
+app.get('/users', (req, res) => {
+  User.find({}, (err, users) => {
+    if(err) return res.send(err);
+    res.json(users);
+  })
+});// get
+
 app.listen(3000, () => {
   console.log('Server started on 3000');
 });

@@ -6,32 +6,47 @@
     <title>Admin</title>
   </head>
   <body>
-  <h1>Admin Page</h1>
+    <h1>Admin Page</h1>
 
-  <h2>Active Subjects</h2>
-  <ul id="subDiv">
+      <h2>Active Subjects</h2>
+      <ul id="subDiv">
 
-  </ul>
-<button id="subjects"> Delete current subjects</button><br><br>
+      </ul>
+      <button id="subjects"> Delete current subjects</button>
 
-  <h2>Active Tables</h2>
-  <ul id="tableDiv">
+      <h2>Active Tables</h2>
+      <ul id="tableDiv">
 
-  </ul>
-  <div >
-  </div>
-
-<button id="tables">Delete current tables</button><br><br>
+      </ul>
+      <button id="tables">Delete current tables</button>
 
 
 
-    <h3>Enter Subject:</h3>
-    <input type="text" id="inputSubjects"><button id="postSubjects">SUBMIT</button><button id="updateSubjects">UPDATE</button>
+      <h3>Enter Subject:</h3>
+      <input type="text" id="inputSubjects">
+      <button id="postSubjects">SUBMIT</button>
+      <button id="updateSubjects">UPDATE</button>
 
 
-    <h3>Enter Table:</h3>
-    <input type="text" id="inputTables"><button id="postTables">SUBMIT</button><button id="updateTables">UPDATE</button>
-  </form>
+      <h3>Enter Table:</h3>
+      <input type="text" id="inputTables">
+      <button id="postTables">SUBMIT</button>
+      <button id="updateTables">UPDATE</button>
+
+      <h2>Active Users</h2>
+      <ul id="userDiv">
+
+      </ul>
+
+      <h3>Enter Username:</h3>
+      <input type="text" id="inputUser">
+      <h3>Enter Password:</h3>
+      <input type="text" id="inputPassword">
+      <button id="postSubjects">ADD</button>
+
+
+
+
 
   <script>
   $(document).ready(function(){
@@ -110,6 +125,11 @@
         })
 
         tablesId = data[0]._id;
+      })
+
+      $.ajax('/users').done(function(data) {
+
+        console.log(data);
       })
 
 
