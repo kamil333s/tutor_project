@@ -5,11 +5,11 @@ let bodyParser = require('body-parser');
 let app = express();
 let mongoose = require('mongoose');
 let models = require('./models');
-let User = models.User
+let User = models.User;
 let Session = models.Session;
 let Subject = models.Subject;
 let Table = models.Table;
-let auth = require('./lib/authenticate')
+let auth = require('./lib/authenticate');
 
 
 // let DB_PORT = process.env.MONGOLAB_URI || 'mongodb://localhost/db';
@@ -32,14 +32,14 @@ app.put('/sessions/:id', (req, res) => {
   var d = new Date();
   Session.findByIdAndUpdate(req.params.id, {timeOut: d}, (err, session) => {
     if (err) {
-      console.log('err: ', err)
-      console.log(typeof(err))
-      res.json(err.toString())
+      console.log('err: ', err);
+      console.log(typeof(err));
+      res.json(err.toString());
     } else {
-    res.json(session);
+      res.json(session);
     }
   });
-})
+});
 
 // Create new session in queue- POST with body {"table" : "17", "subject" : "Algebra 1"}
 app.post('/sessions', (req, res) => {
@@ -50,25 +50,25 @@ app.post('/sessions', (req, res) => {
   var newSession = new Session(sessionObj);
   newSession.save((err, session) => {
     if (err) {
-      console.log('err: ', err)
-      console.log(typeof(err))
-      res.json(err.toString())
+      console.log('err: ', err);
+      console.log(typeof(err));
+      res.json(err.toString());
     } else {
-    res.json(session);
+      res.json(session);
     }
   });
-})
+});
 
 // Display all open sessions
 app.get('/sessions', (req, res) => {
   // Displays current queue  
   Session.find({timeOut:null}, (err, sessions) => {
     if (err) {
-      res.json({error: err})
+      res.json({error: err});
     }
     res.json(sessions);
   });
-})
+});
 
 // Delete a session
 app.delete('/sessions/:id', (req, res) => {
@@ -79,7 +79,7 @@ app.delete('/sessions/:id', (req, res) => {
       res.json({'message': 'session removed'});
     });
   });
-})
+});
 
 
 
@@ -92,22 +92,22 @@ ADMIN====================
 
 app.get('/admin', (req, res) => {
   // displays all Subjects and Tables
-  var defaults = {'subjects':[], 'tables':[]}
+  var defaults = {'subjects':[], 'tables':[]};
   Subject.find({}, (err, list) => {
     if (err) {
-      res.json({error: err})
+      res.json({error: err});
     }// if
     defaults.subjects = list;
 
     Table.find({}, (err, list) => {
       if (err) {
-        res.json({error: err})
+        res.json({error: err});
       }// if 
-      defaults.tables = list[0].table
+      defaults.tables = list[0].table;
       res.json(defaults);
     });    
   });
-})
+});
 
 
 /*
@@ -118,53 +118,55 @@ SUBJECTS============
 
 // Display the subjects
 app.get('/admin/subjects', (req, res) => {
-    Subject.find({}, (err, list) => {
-      if (err) {
-        res.json({error: err})
-      }// if 
-      res.json(list);
-    });    
-})
+  Subject.find({}, (err, list) => {
+    if (err) {
+      res.json({error: err});
+    }// if 
+    res.json(list);
+  });    
+});
 
 // Deletes all subjects
 app.delete('/admin/subjects', (req, res) => {
-    Subjects.remove({}, (err) => {
-      if (err) {
-        res.send(err)
-      } else {
-        res.send('Subjects deleted!')
-      }
-    })
-})// delete
+  Subject.remove({}, (err) => {
+    if (err) {
+      res.send(err);
+    } else {
+      res.send('Subjects deleted!');
+    }
+  });
+});// delete
 
 // Creates the list of subjects
 app.post('/admin/subjects', (req, res) => {
   // Create subjects
-    console.log(req.body)
+  console.log(req.body);
   Subject.count({}, (err, subjects) => {
-    console.log("Count: ", subjects)
     if (err) {
       return res.send(err);
     } else {
       if (subjects == 0) {
         var newSubject = new Subject();
         newSubject.subject = req.body.subjects;
-        console.log("req.body.subjects: ", req.body.subjects)
+        console.log('newSubject: ', newSubject);
+        console.log('req.body: ', req.body);
+        console.log('newSubject.subject: ', newSubject.subject);
+        console.log('req.body.subjects: ', req.body.subjects);
         newSubject.save((err, subject) => {
           if (err) {
-            console.log('err: ', err)
-            console.log(typeof(err))
-            res.json(err.toString())
+            console.log('err: ', err);
+            console.log(typeof(err));
+            res.json(err.toString());
           } else {
-            res.json({'Subjects created: ': subject});
+            res.json(subject);
           }// if (err)
-        })// save
+        });// save
       } else {
-        res.send('Subjects already exists!')
+        res.send('Subjects already exists!');
       }// if (tables ==0)
     }// if (err)
-  })// count
-})// post
+  });// count
+});// post
 
 // Modify the list of subjects
 app.put('/admin/subjects/:id', (req, res) => {
@@ -175,7 +177,7 @@ app.put('/admin/subjects/:id', (req, res) => {
     console.log('Updated: ', subject);
     res.json(subject);
   });
-})
+});
 
 /*
 =================
@@ -185,51 +187,51 @@ TABLES============
 
 // Display the tables
 app.get('/admin/tables', (req, res) => {
-    Table.find({}, (err, list) => {
-      if (err) {
-        res.json({error: err})
-      }// if 
-      res.json(list);
-    });    
-})
+  Table.find({}, (err, list) => {
+    if (err) {
+      res.json({error: err});
+    }// if 
+    res.json(list);
+  });    
+});
 
 // Deletes all tables
 app.delete('/admin/tables', (req, res) => {
-    Table.remove({}, (err) => {
-      if (err) {
-        res.send(err)
-      } else {
-        res.send('Tables deleted!')
-      }
-    })
-})// delete
+  Table.remove({}, (err) => {
+    if (err) {
+      res.send(err);
+    } else {
+      res.send('Tables deleted!');
+    }
+  });
+});// delete
 
 // Creates the list of tables
 app.post('/admin/tables', (req, res) => {
   // Create tables
-    console.log(req.body)
+  console.log(req.body);
   Table.count({}, (err, tables) => {
-    console.log("Count: ", tables)
+    console.log('Count: ', tables);
     if (err) {
       return res.send(err);
     } else {
       if (tables == 0) {
-        var newTable = new Table({'table': req.body.table})
+        var newTable = new Table({'table': req.body.table});
         newTable.save((err, table) => {
           if (err) {
-            console.log('err: ', err)
-            console.log(typeof(err))
-            res.json(err.toString())
+            console.log('err: ', err);
+            console.log(typeof(err));
+            res.json(err.toString());
           } else {
             res.json({'Tables created: ': table});
           }// if (err)
-        })// save
+        });// save
       } else {
-        res.send('Tables already exists!')
+        res.send('Tables already exists!');
       }// if (tables ==0)
     }// if (err)
-  })// count
-})// post
+  });// count
+});// post
 
 // Modify the list of tables
 app.put('/admin/tables/:id', (req, res) => {
@@ -240,11 +242,11 @@ app.put('/admin/tables/:id', (req, res) => {
     console.log('Updated: ', table);
     res.json(table);
   });
-})
+});
 
 app.delete('/admin', (req, res) => {
   // Clears the queue
-})
+});
 
 
 // Add a user to the database 
@@ -253,14 +255,14 @@ app.post('/setup', auth, (req, res) => {
   var newUser = new User(req.body);
   newUser.save((err, user) => {
     if (err) {
-      console.log('err: ', err)
-      console.log(typeof(err))
-      res.json(err.toString())
+      console.log('err: ', err);
+      console.log(typeof(err));
+      res.json(err.toString());
     } else {
-    res.json({'User created: ': user});
+      res.json({'User created: ': user});
     }
   });
-})
+});
 
 app.listen(3000, () => {
   console.log('Server started on 3000');

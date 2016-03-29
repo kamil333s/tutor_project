@@ -8,4 +8,4 @@ module.exports = (mongoose, models) => {
   });
   let Session = mongoose.model('Session', sessionSchema);
   models.Session = Session;
-}
+};
