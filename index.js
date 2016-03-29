@@ -192,15 +192,23 @@ app.post('/admin/subjects', (req, res) => {
 
 // Modify the list of subjects
 app.put('/admin/subjects/:id', (req, res) => {
-  Subject.findByIdAndUpdate(req.params.id, { subject: req.body.subject }, (err, subject) => {
+  console.log(req.body);
+  Subject.findById(req.params.id, (err, subject) => {
     if (err) {
       return res.send(err);
     } // if
     // console.log('Updated: ', subject);
-    res.json({
-      message: 'Subject updated',
-      data: subject
+    req.body.subjects.forEach(function(sub) {
+      subject.subjects.push(sub);
+    })
+    subject.save(function(err) {
+      if(err) return res.send(err);
+      res.json({
+        message: 'Subject updated',
+        data: subject
+      });
     });
+
   });// findByIdAndUpdate
 });// put
 
@@ -257,14 +265,21 @@ app.post('/admin/tables', (req, res) => {
 
 // Modify the list of tables
 app.put('/admin/tables/:id', (req, res) => {
-  Table.findByIdAndUpdate(req.params.id, { table: req.body.table }, (err, table) => {
+  Table.findById(req.params.id, (err, table) => {
     if (err) {
       return res.send(err);
     } // if
-    res.json({
-      message: 'Table updated',
-      data: table
-    });
+    req.body.tables.forEach(function(tab) {
+      table.tables.push(tab);
+    })
+    table.save(function(err) {
+      if(err) return res.send(err);
+      res.json({
+        message: 'Table updated',
+        data: table
+      });
+    })
+
   }); //findByIdAndUpdate
 }); //put
 

@@ -2,39 +2,119 @@
 <html>
   <head>
     <meta charset="utf-8">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.2/jquery.min.js"></script>
     <title>Admin</title>
   </head>
   <body>
   <h1>Admin Page</h1>
-  <h2>Subjects list</h2>
-  <form class="" action="/admin/subjects" method="GET">
-    <button type="submit" >Get current subjects</button>
-  </form>
-  <br>
 
-  <form class="" action="/admin/subjects" method="DELETE">
-    <button type="submit" >Delete current subjects</button>
-  </form>
-  <br>
+  <h2>Active Subjects</h2>
+  <ul id="subDiv">
 
-  <form class="" action="/admin/tables" method="GET">
-    <button type="submit" >Get current Tables</button>
-  </form>
-  <br>
+  </ul>
+<button id="subjects"> Delete current subjects</button><br><br>
 
-  <form class="" action="/admin/tables" method="DELETE">
-    <button type="submit" >Delete current tables</button>
-  </form>
-  <br>
+  <h2>Active Tables</h2>
+  <ul id="tableDiv">
 
-  <form class="" action="/admin/subjects" method="POST">
-    Enter Subject: <br>
-    <input type="text" name="subjects" value=""><button type="submit" >SUBMIT</button>
+  </ul>
+  <div >
+  </div>
+
+<button id="tables">Delete current tables</button><br><br>
+
+
+
+    <h3>Enter Subject:</h3>
+    <input type="text" id="inputSubjects"><button id="postSubjects">SUBMIT</button><button id="updateSubjects">UPDATE</button>
+
+
+    <h3>Enter Table:</h3>
+    <input type="text" id="inputTables"><button id="postTables">SUBMIT</button><button id="updateTables">UPDATE</button>
   </form>
-  <br>
-  <form class="" action="/admin/tables" method="POST">
-    Enter Table: <br>
-    <input type="text" name="tables" value=""><button type="submit" >SUBMIT</button>
-  </form>
+
+  <script>
+  $(document).ready(function(){
+    var subjectsId;
+    var tablesId;
+    $('#subjects').on('click', function(e) {
+      e.preventDefault();
+      $.ajax({url :'/admin/subjects', method : 'DELETE'}).done(function(data) {
+        $('#subDiv').empty();
+      })
+    })
+
+    $('#tables').on('click', function(e) {
+      e.preventDefault();
+      $.ajax({url :'/admin/tables', method : 'DELETE'}).done(function(data) {
+        $('#tableDiv').empty();
+      })
+    })
+
+
+    $('#postSubjects').on('click', function(e) {
+      e.preventDefault();
+      var text = $('#inputSubjects').val().split(' ');
+      console.log('Contents: '+text);
+      $.ajax({url :'/admin/subjects', method : 'POST', data: {subjects: text}}).done(function(data) {
+        console.log(data);
+        location.reload();
+      })
+    })
+
+    $('#postTables').on('click', function(e) {
+      e.preventDefault();
+      var text = $('#inputTables').val().split(' ');
+      console.log('Contents: '+text);
+      $.ajax({url :'/admin/tables', method : 'POST', data: {tables: text}}).done(function(data) {
+        console.log(data);
+        location.reload();
+      })
+    })
+
+    $('#updateSubjects').on('click', function(e) {
+      e.preventDefault();
+      var text = $('#inputSubjects').val().split(' ');
+      console.log('Contents: '+text);
+      $.ajax({url :'/admin/subjects/'+subjectsId, method : 'PUT', data: {subjects: text}}).done(function(data) {
+        console.log(data)
+        location.reload();
+      ;})
+    })
+
+    $('#updateTables').on('click', function(e) {
+      e.preventDefault();
+      var text = $('#inputTables').val().split(' ');
+      console.log('Contents: '+text);
+      $.ajax({url :'/admin/tables/'+tablesId, method : 'PUT', data: {tables: text}}).done(function(data) {
+        console.log(data);
+        location.reload();
+      })
+    })
+
+
+
+      $.ajax('/admin/subjects').done(function(data) {
+        data[0].subjects.forEach(function(sub) {
+          $('#subDiv').append('<li>'+sub+'</li>');
+        })
+
+        subjectsId = data[0]._id;
+      })
+
+
+
+      $.ajax('/admin/tables').done(function(data) {
+        data[0].tables.forEach(function(tab) {
+          $('#tableDiv').append('<li>'+tab+'</li>');
+        })
+
+        tablesId = data[0]._id;
+      })
+
+
+
+  });
+  </script>
   </body>
 </html>
