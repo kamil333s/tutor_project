@@ -11,8 +11,16 @@ let Subject = models.Subject;
 let Table = models.Table;
 let auth = require('./lib/authenticate');
 
+
 app.set('view engine', 'ejs');
-app.use(bodyParser.urlencoded({ extended: false }))
+
+// The extended config object key now needs
+// to be explicitly passed, since it now has no default value.
+app.use(bodyParser.urlencoded({
+  extended: true
+}));
+
+
 app.use(bodyParser.json());
 
 let publicRouter = express.Router();
