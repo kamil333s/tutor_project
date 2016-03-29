@@ -11,6 +11,8 @@ let Subject = models.Subject;
 let Table = models.Table;
 let auth = require('./lib/authenticate');
 
+app.set('view engine', 'ejs');
+app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json());
 
 let publicRouter = express.Router();
@@ -117,10 +119,10 @@ app.get('/admin', (req, res) => {
     defaults.subjects = list;
     Table.find({}, (err, list) => {
       if (err) {
-        res.json({error: err});
+        res.json({error: err})
       }// if
       defaults.tables = list[0].table;
-      res.json(defaults);
+      res.render('admin');
     });// Table.find
   });// Subject.find
 });// get
@@ -156,8 +158,9 @@ app.delete('/admin/subjects', (req, res) => {
 // Creates the list of subjects
 app.post('/admin/subjects', (req, res) => {
   // Create subjects
-  // console.log(req.body);
+  console.log(req.body);
   Subject.count({}, (err, subjects) => {
+
     if (err) {
       return res.send(err);
     } else {
