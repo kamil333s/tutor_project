@@ -24,6 +24,7 @@ app.use(bodyParser.urlencoded({
 
 app.use(bodyParser.json());
 
+
 let publicRouter = express.Router();
 require('./routes/login')(publicRouter);
 app.use(publicRouter);
@@ -80,6 +81,7 @@ app.post('/sessions', (req, res) => {
 app.get('/sessions', (req, res) => {
   // Displays current queue
   Session.find({timeOut:null}, (err, sessions) => {
+
     if (err) {
       res.json({error: err});
     }// if
@@ -145,7 +147,6 @@ SUBJECTS============
 
 // Display the subjects
 app.get('/admin/subjects', (req, res) => {
-  console.log(req.method);
   Subject.find({}, (err, list) => {
     if (err) {
       res.json({error: err});
