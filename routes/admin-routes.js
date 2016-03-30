@@ -62,7 +62,7 @@ module.exports = (router, models) => {
         if(err) return res.send(err);
         json2csv({ data: data, fields: fields }, (err, csv) => {
           if (err) console.log(err);
-          fs.writeFile(__dirname+'/downloads/sessions.csv', csv, function(err) {
+          fs.writeFile(__dirname+'/../downloads/sessions.csv', csv, function(err) {
             if (err) throw err;
             res.send('File exported');
           });
@@ -79,7 +79,7 @@ module.exports = (router, models) => {
           if (err) console.log(err);
           sendgrid.send({
             to:       'javascriptdeveloper321@gmail.com',
-            from:     'other@example.com',
+            from:     'no-replay@example.com',
             subject:  'Export CSV Raw Data',
             text:     csv
           }, function(err, json) {

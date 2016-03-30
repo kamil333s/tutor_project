@@ -130,6 +130,20 @@
       })
     })
 
+    $('#downloadData').on('click', (e) => {
+      e.preventDefault();
+      $.ajax('/admin/downloads').done((data) => {
+        console.log(data);
+      })
+    })
+
+    $('#emailData').on('click', (e) => {
+      e.preventDefault();
+      $.ajax('/admin/email').done((data) => {
+        console.log(data);
+      })
+    })
+
 
 
       $.ajax('/admin/subjects').done(function(data) {
