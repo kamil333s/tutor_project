@@ -1,9 +1,10 @@
 'use strict';
 let cookieParser = require('cookie-parser');
-let models = require('../models');
-let User = models.User;
 
-module.exports = (router) => {
+
+module.exports = (router, models) => {
+  let User = models.User;
+  
   router.post('/login', (req, res) => {
 
     // console.log(req.headers.authorization);

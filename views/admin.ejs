@@ -48,6 +48,10 @@
       Admin: <input type="checkbox" id="inputAdmin" value="true">
       <button id="postUser">ADD</button>
 
+      <h1>Export Session Data as CSV file</h1>
+      <button id="downloadData">DOWNLOAD</button>
+      <button id="emailData">EMAIL</button>
+
 
 
 
@@ -100,7 +104,7 @@
         admin = true;
       }
 
-      $.ajax({url :'/users', method : 'POST', data: {name:name, password:password, admin:admin}}).done(function(data) {
+      $.ajax({url :'/admin/users', method : 'POST', data: {name:name, password:password, admin:admin}}).done(function(data) {
         console.log(data);
         location.reload();
       })
@@ -146,7 +150,7 @@
         tablesId = data[0]._id;
       })
 
-      $.ajax('/users').done(function(data) {
+      $.ajax('/admin/users').done(function(data) {
         data.forEach((obj) => {
           $('#userDiv').append('<li>'+obj.name+'</li>')
         })
