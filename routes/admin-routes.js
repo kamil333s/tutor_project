@@ -1,6 +1,7 @@
 'use strict';
 let fs = require('fs');
 let json2csv = require('json2csv');
+let sendgrid  = require('sendgrid')(process.env.U, process.env.P);
 
 module.exports = (router, models) => {
   let Session = models.Session;
@@ -67,5 +68,26 @@ module.exports = (router, models) => {
           });
         });
       });
+    });
+
+  router.route('/email')
+    .get((req, res) => {
+      var fields = ['timeIn', 'timeOut', 'subject', 'table'];
+      Session.find({}, (err, data) => {
+        if(err) return res.send(err);
+        json2csv({ data: data, fields: fields }, (err, csv) => {
+          if (err) console.log(err);
+          sendgrid.send({
+            to:       'javascriptdeveloper321@gmail.com',
+            from:     'other@example.com',
+            subject:  'Export CSV Raw Data',
+            text:     csv
+          }, function(err, json) {
+            if (err) { return console.error(err); }
+            console.log(json);
+          });
+        });
+      });
+      res.send('Email sent');
     });
 }
