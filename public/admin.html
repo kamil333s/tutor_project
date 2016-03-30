@@ -10,6 +10,7 @@
     </style>
   </head>
   <body>
+    <button id="logOut">LOGOUT</button>
     <h1>Admin Page</h1>
 
       <h2>Active Subjects</h2><button id="subjects"> Delete current subjects</button>
@@ -60,16 +61,30 @@
   $(document).ready(function(){
     var subjectsId;
     var tablesId;
+
+    $('#logOut').on('click', function(e) {
+      e.preventDefault();
+      delete localStorage.token;
+      console.log('Logged Out!');
+    })
     $('#subjects').on('click', function(e) {
       e.preventDefault();
-      $.ajax({url :'/admin/subjects', method : 'DELETE'}).done(function(data) {
+      $.ajax({
+        headers: {'Authorization': localStorage.token},
+        url :'/admin/subjects',
+        method : 'DELETE'
+      }).done(function(data) {
         $('#subDiv').empty();
       })
     })
 
     $('#tables').on('click', function(e) {
       e.preventDefault();
-      $.ajax({url :'/admin/tables', method : 'DELETE'}).done(function(data) {
+      $.ajax({
+        headers: {'Authorization': localStorage.token},
+        url :'/admin/tables',
+        method : 'DELETE'
+      }).done(function(data) {
         $('#tableDiv').empty();
       })
     })
@@ -79,7 +94,13 @@
       e.preventDefault();
       var text = $('#inputSubjects').val().split(',');
       console.log('Contents: '+text);
-      $.ajax({url :'/admin/subjects', method : 'POST', data: {subjects: text}}).done(function(data) {
+      console.log('Token'+localStorage.token);
+      $.ajax({
+        headers: {'Authorization': localStorage.token},
+        url :'/admin/subjects',
+        method : 'POST',
+        data: {subjects: text}
+      }).done(function(data) {
         console.log(data);
         location.reload();
       })
@@ -89,7 +110,12 @@
       e.preventDefault();
       var text = $('#inputTables').val().split(',');
       console.log('Contents: '+text);
-      $.ajax({url :'/admin/tables', method : 'POST', data: {tables: text}}).done(function(data) {
+      $.ajax({
+        headers: {'Authorization': localStorage.token},
+        url :'/admin/tables',
+        method : 'POST',
+        data: {tables: text}
+      }).done(function(data) {
         console.log(data);
         location.reload();
       })
@@ -104,7 +130,11 @@
         admin = true;
       }
 
-      $.ajax({url :'/admin/users', method : 'POST', data: {name:name, password:password, admin:admin}}).done(function(data) {
+      $.ajax({
+        url :'/admin/users',
+        method : 'POST',
+        data: {name:name, password:password, admin:admin}
+      }).done(function(data) {
         console.log(data);
         location.reload();
       })
@@ -114,7 +144,12 @@
       e.preventDefault();
       var text = $('#inputSubjects').val().split(' ');
       console.log('Contents: '+text);
-      $.ajax({url :'/admin/subjects/'+subjectsId, method : 'PUT', data: {subjects: text}}).done(function(data) {
+      $.ajax({
+        headers: {'Authorization': localStorage.token},
+        url :'/admin/subjects/'+subjectsId,
+        method : 'PUT',
+        data: {subjects: text}
+      }).done(function(data) {
         console.log(data)
         location.reload();
       ;})
@@ -124,7 +159,12 @@
       e.preventDefault();
       var text = $('#inputTables').val().split(' ');
       console.log('Contents: '+text);
-      $.ajax({url :'/admin/tables/'+tablesId, method : 'PUT', data: {tables: text}}).done(function(data) {
+      $.ajax({
+        headers: {'Authorization': localStorage.token},
+        url :'/admin/tables/'+tablesId,
+        method : 'PUT',
+        data: {tables: text}
+      }).done(function(data) {
         console.log(data);
         location.reload();
       })
@@ -132,21 +172,33 @@
 
     $('#downloadData').on('click', (e) => {
       e.preventDefault();
-      $.ajax('/admin/downloads').done((data) => {
+      $.ajax({
+        headers: {'Authorization': localStorage.token},
+        method: 'GET',
+        url: '/admin/downloads'
+      }).done((data) => {
         console.log(data);
       })
     })
 
     $('#emailData').on('click', (e) => {
       e.preventDefault();
-      $.ajax('/admin/email').done((data) => {
+      $.ajax({
+        headers: {'Authorization': localStorage.token},
+        method: 'GET',
+        url: '/admin/email'
+      }).done((data) => {
         console.log(data);
       })
     })
 
 
 
-      $.ajax('/admin/subjects').done(function(data) {
+      $.ajax({
+        headers: {'Authorization': localStorage.token},
+        method: 'GET',
+        url: '/admin/subjects'
+      }).done(function(data) {
         data[0].subjects.forEach(function(sub) {
           $('#subDiv').append('<li>'+sub+'</li>');
         })
@@ -156,7 +208,11 @@
 
 
 
-      $.ajax('/admin/tables').done(function(data) {
+      $.ajax({
+        headers: {'Authorization': localStorage.token},
+        method: 'GET',
+        url: '/admin/tables'
+      }).done(function(data) {
         data[0].tables.forEach(function(tab) {
           $('#tableDiv').append('<li>'+tab+'</li>');
         })
@@ -164,7 +220,11 @@
         tablesId = data[0]._id;
       })
 
-      $.ajax('/admin/users').done(function(data) {
+      $.ajax({
+        headers: {'Authorization': localStorage.token},
+        method: 'GET',
+        url: '/admin/users'
+      }).done(function(data) {
         data.forEach((obj) => {
           $('#userDiv').append('<li>'+obj.name+'</li>')
         })

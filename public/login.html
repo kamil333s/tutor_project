@@ -2,6 +2,7 @@
 <html>
   <head>
     <meta charset="utf-8">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.2/jquery.min.js"></script>
     <title>Login</title>
   </head>
   <body>
@@ -9,5 +10,32 @@
     <input type="text" id="userName" placeholder="Enter username...">
     <input type="text" id="userPassword" placeholder="Enter password...">
     <button type="button" id="login">LOGIN</button>
+
+  <script type="text/javascript">
+    $(document).ready(function() {
+      // var username;
+      // var password;
+      $('#login').on('click', (e) => {
+        e.preventDefault();
+        console.log('Button Clicked!');
+        var username = $('#userName').val();
+        var password = $('#userPassword').val();
+        console.log('Username: '+ username);
+        console.log('userPassword: '+ password);
+        $.ajax(
+          {
+            type: 'POST',
+            headers: {'Authorization': 'Basic ' + btoa(username+':'+password)},
+            url: '/login'
+          }).done((data) => {
+            console.log(data);
+            localStorage.token = data.token;
+          })
+          console.log('Username: '+ username);
+          console.log('userPassword: '+ password);
+      })
+
+    })
+  </script>
   </body>
 </html>
