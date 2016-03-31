@@ -2,8 +2,17 @@
 <head>
 <link rel="stylesheet" href="styles.css" type="text/css">
 <meta http-equiv="Content-Language" content="en">
+<style media="screen">
+  nav li { display: inline; }
+</style>
 </head>
 <body>
+  <nav>
+    <li><a href="index.html">Request Help</a></li>
+    <li><a href="display.html">Queue</a></li>
+    <li><a href="admin.html">Admin</a></li>
+    <li><a href="login.html">Login</a></li>
+  </nav>
 
 <form name='session'  >
 Subject: <select name='subject' id='subject'>
@@ -11,7 +20,7 @@ Subject: <select name='subject' id='subject'>
 
 Table number: <select name='table' id="table">
 </select><br/>
-<input id='submitButton' type='submit' value='Submit'/>
+<button  id="submitSession">SUBMIT</button>
 </form>
 
 <script type="text/javascript" src="./js/jquery.js"></script>
