@@ -12,8 +12,6 @@ let subjectsRouter = express.Router();
 let tablesRouter = express.Router();
 
 
-
-// var io = require('socket.io')(server);
 var io = require('socket.io').listen(app.listen(3000, () => {
   console.log('Sockets listening on 3000');
 }));
@@ -22,8 +20,8 @@ io.sockets.on('connection', function (socket) {
     console.log('client connect');
     socket.on('echo', function (data) {
       console.log('recieved echo!!');
-    io.sockets.emit('newSession', data);
- });
+      io.sockets.emit('newSession', data);
+    });
 });
 
 require('./routes/login')(publicRouter, models);
@@ -41,22 +39,9 @@ app.use(bodyParser.urlencoded({ extended: true}));
 app.use(bodyParser.json());
 app.use(publicRouter);
 app.use(sessionsRouter);
-// app.use(auth);
+app.use(auth);
 app.use('/admin', adminRouter, subjectsRouter,  tablesRouter);
 app.use(function(req,res,next){
     req.io = io;
     next();
 });
-
-
-// var io = require('socket.io').listen(app.listen(3000));
-// var server = app.listen(3000, () => {
-//   console.log('Server started on 3000');
-// });
-// var io = require('socket.io')(server);
-
-
-// app.listen(3000, () => {
-//   console.log('Server started on 3000');
-// });
-
