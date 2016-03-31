@@ -5,21 +5,29 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.2/jquery.min.js"></script>
     <title>Admin</title>
     <style media="screen">
-      body {
-      }
+      nav li { display: inline; }
     </style>
   </head>
   <body>
+    <nav>
+      <li><a href="admin.html">Admin</a></li>
+      <li><a href="display.html">Queue</a></li>
+      <li><a href="index.html">Request Help</a></li>
+      <li><a href="login.html">Login</a></li>
+    </nav>
     <button id="logOut">LOGOUT</button>
     <h1>Admin Page</h1>
 
-      <h2>Active Subjects</h2><button id="subjects"> Delete current subjects</button>
+      <h2>Active Subjects</h2><button id="subjects"> Delete current subjects</button><br>
+      <button id="showSubjects">Show Subjects</button><br>
+
       <ul id="subDiv">
 
       </ul>
 
 
-      <h2>Active Tables</h2><button id="tables">Delete current tables</button>
+      <h2>Active Tables</h2><button id="tables">Delete current tables</button><br>
+      <button id="showTables">Show Tables</button><br>
       <ul id="tableDiv">
 
       </ul>
@@ -39,6 +47,7 @@
       <button id="updateTables">UPDATE</button>
 
       <h2>Active Users</h2>
+      <button id="showUsers">Show Users</button><br>
       <ul id="userDiv">
 
       </ul>
@@ -61,6 +70,7 @@
   $(document).ready(function(){
     var subjectsId;
     var tablesId;
+    $('#subDiv, #tableDiv, #userDiv').hide();
 
     $('#logOut').on('click', function(e) {
       e.preventDefault();
@@ -88,7 +98,20 @@
         $('#tableDiv').empty();
       })
     })
+    $('#showSubjects').on('click', function(e) {
+      e.preventDefault();
+      $('#subDiv').toggle();
+    })
 
+    $('#showTables').on('click', function(e) {
+      e.preventDefault();
+      $('#tableDiv').toggle();
+    })
+
+    $('#showUsers').on('click', function(e) {
+      e.preventDefault();
+      $('#userDiv').toggle();
+    })
 
     $('#postSubjects').on('click', function(e) {
       e.preventDefault();

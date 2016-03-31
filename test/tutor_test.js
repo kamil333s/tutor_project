@@ -34,8 +34,6 @@ describe('RESTful API', function() {
         .post('/users')
         .send({name: 'mike', password: 'password'})
         .end(function(err, res) {
-          // console.log(err);
-          // console.log(res.body);
           expect(err).to.eql(null);
           expect(res.body.message).to.eql('New user created');
           done();
@@ -47,7 +45,6 @@ describe('RESTful API', function() {
         .post('/login')
         .auth('mike', 'password')
         .end((err, res) => {
-          token = res.body.token;
           expect(err).to.eql(null);
           expect(res.body).to.have.property('token');
           done();
@@ -57,6 +54,8 @@ describe('RESTful API', function() {
   })
 
   describe('Sessions routes', function() {
+
+
 
     it ('should be able to create a session', function(done) {
       chai.request('localhost:3000')
@@ -104,14 +103,29 @@ describe('RESTful API', function() {
 
   describe('Tables routes', function() {
 
+    beforeEach((done) => {
+      chai.request('localhost:3000')
+        .post('/login')
+        .auth('mike', 'password')
+        .end((err, res) => {
+          token = res.body.token;
+          expect(err).to.eql(null);
+          expect(res.body).to.have.property('token');
+          done();
+        })
+    })
+
+
+
     it ('should create a list ', function(done) {
       chai.request('localhost:3000')
         .post('/admin/tables')
-        .send({table: 'A7'})
+        .set('authorization', token)
+        .send({tables: ['A7']})
         .end((err, res) => {
-          tablesId = res.body.data._id;
+          // console.log(res.body);
           expect(err).to.eql(null);
-          expect(res.body.data).to.have.property('_id');
+          expect(res.body).to.have.property('_id');
           done();
         })
     });
@@ -119,6 +133,7 @@ describe('RESTful API', function() {
     it ('should return an array table ', function(done) {
       chai.request('localhost:3000')
         .get('/admin/tables')
+        .set('authorization', token)
         .end((err, res) => {
           expect(err).to.eql(null);
           expect(Array.isArray(res.body)).to.eql(true);
@@ -126,96 +141,91 @@ describe('RESTful API', function() {
         })
     });
 
+  describe('Create a table Id', () => {
 
+    beforeEach((done) => {
+      chai.request('localhost:3000')
+        .post('/admin/tables')
+        .set('authorization', token)
+        .send({tables: ['A8']})
+        .end((err, res) => {
+          tablesId = res.body._id;
+          done();
+        })
+    })
 
     it ('should update a table ', function(done) {
       chai.request('localhost:3000')
         .put('/admin/tables/'+tablesId)
-        .send({table: 'A7'})
+        .set('authorization', token)
+        .send({tables: ['A7']})
         .end((err, res) => {
           expect(err).to.eql(null);
           expect(res.body.message).to.eql('Table updated');
           done();
         })
     });
-
-    it ('should delete tables', function(done) {
-      chai.request('localhost:3000')
-        .del('/admin/tables')
-        .end((err, res) => {
-          expect(err).to.eql(null);
-          expect(res.text).to.eql('Tables deleted!');
-          done();
-        })
-    });
-
   })
 
-  describe('Subjects routes', function() {
 
-    it ('should create a subject ', function(done) {
-      chai.request('localhost:3000')
-        .post('/admin/subjects')
-        .send({subjects: 'Algebra'})
-        .end((err, res) => {
-          subjectsId = res.body._id;
-          expect(err).to.eql(null);
-          expect(res.body).to.have.property('subjects');
-          done();
-        })
-    });
-
-    it ('should return an array of subjects ', function(done) {
-      chai.request('localhost:3000')
-        .get('/admin/subjects')
-        .end((err, res) => {
-          expect(err).to.eql(null);
-          expect(Array.isArray(res.body)).to.eql(true);
-          done();
-        })
-    });
-
-    it ('should update a subject ', function(done) {
-      chai.request('localhost:3000')
-        .put('/admin/subjects/'+subjectsId)
-        .send({subjects: 'Statistics'})
-        .end((err, res) => {
-          expect(err).to.eql(null);
-          expect(res.body.message).to.eql('Subject updated');
-          done();
-        })
-    });
-
-    it ('should delete a subject ', function(done) {
-      chai.request('localhost:3000')
-        .del('/admin/subjects')
-        .end((err, res) => {
-          expect(err).to.eql(null);
-          expect(res.text).to.eql('Subjects deleted!');
-          done();
-        })
-    });
-
+  //
+  //   it ('should delete tables', function(done) {
+  //     chai.request('localhost:3000')
+  //       .del('/admin/tables')
+  //       .end((err, res) => {
+  //         expect(err).to.eql(null);
+  //         expect(res.text).to.eql('Tables deleted!');
+  //         done();
+  //       })
+  //   });
+  //
+  // })
+  //
+  // describe('Subjects routes', function() {
+  //
+  //   it ('should create a subject ', function(done) {
+  //     chai.request('localhost:3000')
+  //       .post('/admin/subjects')
+  //       .send({subjects: 'Algebra'})
+  //       .end((err, res) => {
+  //         subjectsId = res.body._id;
+  //         expect(err).to.eql(null);
+  //         expect(res.body).to.have.property('subjects');
+  //         done();
+  //       })
+  //   });
+  //
+  //   it ('should return an array of subjects ', function(done) {
+  //     chai.request('localhost:3000')
+  //       .get('/admin/subjects')
+  //       .end((err, res) => {
+  //         expect(err).to.eql(null);
+  //         expect(Array.isArray(res.body)).to.eql(true);
+  //         done();
+  //       })
+  //   });
+  //
+  //   it ('should update a subject ', function(done) {
+  //     chai.request('localhost:3000')
+  //       .put('/admin/subjects/'+subjectsId)
+  //       .send({subjects: 'Statistics'})
+  //       .end((err, res) => {
+  //         expect(err).to.eql(null);
+  //         expect(res.body.message).to.eql('Subject updated');
+  //         done();
+  //       })
+  //   });
+  //
+  //   it ('should delete a subject ', function(done) {
+  //     chai.request('localhost:3000')
+  //       .del('/admin/subjects')
+  //       .end((err, res) => {
+  //         expect(err).to.eql(null);
+  //         expect(res.text).to.eql('Subjects deleted!');
+  //         done();
+  //       })
+  //   });
+  //
   })
 
-  describe('Needs an existing user to work with', function() {
-    beforeEach(function(done) {
-      var testUser = new User({name: 'alem', password:'password'});
-      testUser.save(function(err, data) {
-        if(err) throw err;
-
-        this.testUser = data;
-        done();
-      }.bind(this));
-    });
-
-    it('should be able to create a user in a beforeEach block', function(done) {
-      expect(this.testUser.name).to.eql('alem');
-      expect(this.testUser).to.have.property('_id');
-      done();
-    });
-
-
-
-  });
 });

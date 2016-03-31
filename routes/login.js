@@ -5,17 +5,26 @@ let cookieParser = require('cookie-parser');
 module.exports = (router, models) => {
   let User = models.User;
 
+  router.route('/users')
+  .post((req, res) => {
+    var newUser = new User(req.body);
+    newUser.save((err, user) => {
+      if (err) {
+        res.json(err.toString());
+      } else {
+        res.json({message:'New user created'});
+      }// if
+    }); // save
+  });
+
   router.post('/login', (req, res) => {
 
-    console.log(req.headers.authorization);
     let authorizationArray = req.headers.authorization.split(' ');
     let method = authorizationArray[0];
     let base64ed = authorizationArray[1];
     let authArray = new Buffer(base64ed, 'base64').toString().split(':');
     let name = authArray[0];
     let password = authArray[1];
-    console.log(name);
-    console.log(password);
     // parse based on basic or whatever method
     User.find({name: name}, (err, user) => {
       if (user.length == 0) {

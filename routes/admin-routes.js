@@ -84,7 +84,6 @@ module.exports = (router, models) => {
             text:     csv
           }, function(err, json) {
             if (err) { return console.error(err); }
-            console.log(json);
           });
         });
       });
