@@ -19,7 +19,6 @@ module.exports = (router, models) => {
   router.post('/login', (req, res) => {
 
     let authorizationArray = req.headers.authorization.split(' ');
-    // let method = authorizationArray[0];
     let base64ed = authorizationArray[1];
     let authArray = new Buffer(base64ed, 'base64').toString().split(':');
     let name = authArray[0];

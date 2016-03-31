@@ -155,6 +155,7 @@
       }
 
       $.ajax({
+        headers: {'Authorization': localStorage.token},
         url :'/admin/users',
         method : 'POST',
         data: {name:name, password:password, admin:admin}
