@@ -41,7 +41,7 @@ app.use(bodyParser.urlencoded({ extended: true}));
 app.use(bodyParser.json());
 app.use(publicRouter);
 app.use(sessionsRouter);
-// app.use(auth);
+app.use(auth);
 app.use('/admin', adminRouter, subjectsRouter,  tablesRouter);
 app.use(function(req,res,next){
     req.io = io;
@@ -59,4 +59,3 @@ app.use(function(req,res,next){
 // app.listen(3000, () => {
 //   console.log('Server started on 3000');
 // });
-

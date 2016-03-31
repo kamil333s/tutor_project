@@ -57,9 +57,9 @@ describe('RESTful API', function() {
         .post('/sessions')
         .send({table : '17', subject : 'Algebra 1'})
         .end((err, res) => {
-          sessionsId = res.body._id;
+          sessionsId = res.body.data._id;
           expect(err).to.eql(null);
-          expect(res.body).to.have.property('_id');
+          expect(res.body.message).to.eql('You have been added to the queue.');
           done();
         });
     });
