@@ -2,19 +2,45 @@
 <head>
 <link rel="stylesheet" href="styles.css" type="text/css">
 <meta http-equiv="Content-Language" content="en">
+<style media="screen">
+  nav li { display: inline; }
+</style>
 </head>
 <body>
+  <nav>
+    <li><a href="index.html">Request Help</a></li>
+    <li><a href="display.html">Queue</a></li>
+    <li><a href="admin.html">Admin</a></li>
+    <li><a href="login.html">Login</a></li>
+  </nav>
 
-<form name='session' action='http://localhost:3000/sessions' method='post' enctype="application/json">
+<form name='session'  >
 Subject: <select name='subject' id='subject'>
 </select><br/>
 
 Table number: <select name='table' id="table">
 </select><br/>
-<input type='submit' value='Submit'/>
+<button  id="submitButton">SUBMIT</button>
 </form>
 
-    <script type="text/javascript" src="./js/jquery.js"></script>
-    <script type="text/javascript" src="./js/student.js"></script>
+<script type="text/javascript" src="./js/jquery.js"></script>
+<script type="text/javascript" src="./js/student.js"></script>
+<!-- <script type="text/javascript" src="./js/separate.js"></script> -->
+<script type="text/javascript" src="./js/socket.io.js"></script>
+<script>
+  var socket = io();
+  $('#submitButton').click(function(evt) {
+      evt.preventDefault();
+      var formData = {"subject":$('#subject').val(), "table":$('#table').val()};
+      $.post('http://localhost:3000/sessions', formData, function(data) {
+        if (data.status == 200) {
+          socket.emit('echo', 'Echo!');
+          console.log(data);
+        } else {
+          console.log(data);
+        }
+      });
+    });
+    </script>
 </body>
 </html>
