@@ -7,5 +7,6 @@ require('./session')(mongoose, models);
 require('./subject')(mongoose, models);
 require('./user')(mongoose, models);
 require('./table')(mongoose, models);
+require('./archive')(mongoose, models);
 
 module.exports = models;

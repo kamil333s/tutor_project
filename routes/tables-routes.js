@@ -14,11 +14,13 @@ module.exports = (router, models) => {
     })
     .post((req, res) => {
       // Create tables
-      Table.count({}, (err, tables) => {
+
+      Table.count({tables: req.body.tables}, (err, tables) => {
         if (err) {
           return res.send(err);
         } else {
           if (tables == 0) {
+
             var newTable = new Table(req.body);
             newTable.save((err, table) => {
               if (err) {

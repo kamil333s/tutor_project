@@ -2,6 +2,8 @@
 
 module.exports = (router, models) => {
   let Session = models.Session;
+  let Subject = models.Subject;
+  let Table = models.Table;
 
   router.route('/sessions')
     .get((req, res) => {
@@ -23,10 +25,9 @@ module.exports = (router, models) => {
           res.json({message: 'You are already in the queue!'});
         } else {
           var d = new Date();
-          var sessionObj = req.body;
-          sessionObj.timeIn = d;
-          sessionObj.timeOut = '';
-          var newSession = new Session(sessionObj);
+          req.body.timeIn = d;
+          req.body.timeOut = '';
+          var newSession = new Session(req.body);
           newSession.save((err, session) => {
             if (err) {
               res.json(err.toString());
@@ -43,8 +44,6 @@ module.exports = (router, models) => {
       var d = new Date();
       Session.findByIdAndUpdate(req.params.id, {timeOut: d}, (err, session) => {
         if (err) {
-          console.log('err: ', err);
-          console.log(typeof(err));
           res.json(err.toString());
         } else {
           res.json({
@@ -64,5 +63,25 @@ module.exports = (router, models) => {
           res.json({'message': 'session removed'});
         });// remove
       });// findById
+    });
+
+  router.route('/subjects')
+    .get((req, res) => {
+      Subject.find({}, (err, list) => {
+        if (err) {
+          res.json({error: err});
+        }// if
+        res.json(list);
+      }); // find
+    });
+
+  router.route('/tables')
+    .get((req, res) => {
+      Table.find({}, (err, list) => {
+        if (err) {
+          res.json({error: err});
+        }// if
+        res.json(list);
+      }); // find
     });
 }
