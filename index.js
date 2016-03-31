@@ -4,12 +4,13 @@ let express = require('express');
 let bodyParser = require('body-parser');
 let app = express();
 let models = require('./models');
+let auth = require('./lib/authenticate');
 let publicRouter = express.Router();
 let adminRouter = express.Router();
 let sessionsRouter = express.Router();
 let subjectsRouter = express.Router();
 let tablesRouter = express.Router();
-let auth = require('./lib/authenticate');
+
 
 require('./routes/login')(publicRouter, models);
 require('./routes/admin-routes')(adminRouter, models);
@@ -27,7 +28,6 @@ app.use(bodyParser.json());
 app.use(publicRouter);
 app.use(sessionsRouter);
 app.use(auth);
-
 app.use('/admin', adminRouter, subjectsRouter,  tablesRouter);
 
 

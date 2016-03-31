@@ -10,9 +10,9 @@
   </head>
   <body>
     <nav>
-      <li><a href="admin.html">Admin</a></li>
-      <li><a href="display.html">Queue</a></li>
       <li><a href="index.html">Request Help</a></li>
+      <li><a href="display.html">Queue</a></li>
+      <li><a href="admin.html">Admin</a></li>
       <li><a href="login.html">Login</a></li>
     </nav>
     <button id="logOut">LOGOUT</button>
@@ -61,6 +61,7 @@
       <h1>Export Session Data as CSV file</h1>
       <button id="downloadData">DOWNLOAD</button>
       <button id="emailData">EMAIL</button>
+      <button id="archiveData">ARCHIVE</button>
 
 
 
@@ -210,6 +211,17 @@
         headers: {'Authorization': localStorage.token},
         method: 'GET',
         url: '/admin/email'
+      }).done((data) => {
+        console.log(data);
+      })
+    })
+
+    $('#archiveData').on('click', (e) => {
+      e.preventDefault();
+      $.ajax({
+        headers: {'Authorization': localStorage.token},
+        method: 'POST',
+        url: '/admin/archive'
       }).done((data) => {
         console.log(data);
       })

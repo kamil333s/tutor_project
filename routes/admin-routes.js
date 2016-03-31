@@ -8,7 +8,7 @@ module.exports = (router, models) => {
   let Table = models.Table;
   let Subject = models.Subject;
   let User = models.User;
-
+  let Archive = models.Archive;
   router.route('/')
     .get((req, res) => {
       // displays all Subjects and Tables
@@ -37,7 +37,7 @@ module.exports = (router, models) => {
       });// find
     });
 
-  
+
 
   router.route('/users')
     .get((req, res) => {
@@ -91,4 +91,29 @@ module.exports = (router, models) => {
       });
       res.send('Email sent');
     });
+
+  router.route('/archive')
+    .get((req, res) => {
+      Archive.find({}, (err, data) => {
+        if(err) res.send(err);
+        res.json(data);
+      })
+    })
+    .post((req, res) => {
+      Session.find({}, (err, data) => {
+        if(err) res.send(err);
+        var sessionArr = new Archive();
+        data.forEach((session) => {
+          sessionArr.archive.push(session);
+        })
+        sessionArr.save();
+        res.json(sessionArr)
+      });
+    })
+    .delete((req, res) => {
+      Archive.remove({}, (err, data) => {
+        if(err) res.send(err);
+        res.send('Archive emptied');
+      })
+    })
 }
