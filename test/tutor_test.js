@@ -5,13 +5,8 @@ let mongoose = require('mongoose');
 let chai = require('chai');
 let chaiHTTP = require('chai-http');
 chai.use(chaiHTTP);
-let request = chai.request;
 let expect = chai.expect;
-let models = require('../models');
-let User = models.User;
-let Table = models.Table;
-let Subject = models.Subject;
-let Session = models.Session;
+
 
 var token;
 var sessionsId;
@@ -48,10 +43,10 @@ describe('RESTful API', function() {
           expect(err).to.eql(null);
           expect(res.body).to.have.property('token');
           done();
-        })
-    })
+        });
+    });
 
-  })
+  });
 
   describe('Sessions routes', function() {
 
@@ -60,13 +55,13 @@ describe('RESTful API', function() {
     it ('should be able to create a session', function(done) {
       chai.request('localhost:3000')
         .post('/sessions')
-        .send({table : "17", subject : "Algebra 1"})
+        .send({table : '17', subject : 'Algebra 1'})
         .end((err, res) => {
           sessionsId = res.body._id;
           expect(err).to.eql(null);
           expect(res.body).to.have.property('_id');
           done();
-        })
+        });
     });
 
     it ('should be able to get sessions', function(done) {
@@ -76,7 +71,7 @@ describe('RESTful API', function() {
           expect(err).to.eql(null);
           expect(Array.isArray(res.body)).to.eql(true);
           done();
-        })
+        });
     });
 
     it ('should be able to update a session', function(done) {
@@ -86,7 +81,7 @@ describe('RESTful API', function() {
           expect(err).to.eql(null);
           expect(res.body.message).to.eql('Updated session');
           done();
-        })
+        });
     });
 
     it ('should be able to delete a session', function(done) {
@@ -96,10 +91,10 @@ describe('RESTful API', function() {
           expect(err).to.eql(null);
           expect(res.body.message).to.eql('session removed');
           done();
-        })
+        });
     });
 
-  })
+  });
 
   describe('Tables routes', function() {
 
@@ -112,8 +107,8 @@ describe('RESTful API', function() {
           expect(err).to.eql(null);
           expect(res.body).to.have.property('token');
           done();
-        })
-    })
+        });
+    });
 
 
 
@@ -126,7 +121,7 @@ describe('RESTful API', function() {
           expect(err).to.eql(null);
           expect(res.body).to.have.property('_id');
           done();
-        })
+        });
     });
 
     it ('should return an array table ', function(done) {
@@ -137,9 +132,9 @@ describe('RESTful API', function() {
           expect(err).to.eql(null);
           expect(Array.isArray(res.body)).to.eql(true);
           done();
-        })
+        });
     });
-  })
+  });
 
   describe('Create a table Id', () => {
 
@@ -151,8 +146,8 @@ describe('RESTful API', function() {
         .end((err, res) => {
           tablesId = res.body._id;
           done();
-        })
-    })
+        });
+    });
 
     it ('should update a table ', function(done) {
       chai.request('localhost:3000')
@@ -163,7 +158,7 @@ describe('RESTful API', function() {
           expect(err).to.eql(null);
           expect(res.body.message).to.eql('Table updated');
           done();
-        })
+        });
     });
 
     it ('should delete tables', function(done) {
@@ -174,9 +169,9 @@ describe('RESTful API', function() {
           expect(err).to.eql(null);
           expect(res.text).to.eql('Tables deleted!');
           done();
-        })
+        });
     });
-  })
+  });
 
 
 
@@ -190,8 +185,8 @@ describe('RESTful API', function() {
         .end((err, res) => {
           subjectsId = res.body._id;
           done();
-      })
-    })
+        });
+    });
 
     it ('should create a subject ', function(done) {
       chai.request('localhost:3000')
@@ -202,7 +197,7 @@ describe('RESTful API', function() {
           expect(err).to.eql(null);
           expect(res.body).to.have.property('subjects');
           done();
-        })
+        });
     });
 
     it ('should return an array of subjects ', function(done) {
@@ -213,7 +208,7 @@ describe('RESTful API', function() {
           expect(err).to.eql(null);
           expect(Array.isArray(res.body)).to.eql(true);
           done();
-        })
+        });
     });
 
     it ('should update a subject ', function(done) {
@@ -225,7 +220,7 @@ describe('RESTful API', function() {
           expect(err).to.eql(null);
           expect(res.body.message).to.eql('Subject updated');
           done();
-        })
+        });
     });
 
     it ('should delete a subject ', function(done) {
@@ -236,10 +231,10 @@ describe('RESTful API', function() {
           expect(err).to.eql(null);
           expect(res.text).to.eql('Subjects deleted!');
           done();
-        })
+        });
     });
 
-  })
+  });
 
   describe('Download sessions to csv file', () => {
     it('should download a csv file', (done) => {
@@ -250,9 +245,9 @@ describe('RESTful API', function() {
           expect(err).to.eql(null);
           expect(res.text).to.eql('File exported');
           done();
-        })
-    })
-  })
+        });
+    });
+  });
 
   describe('Email sessions data in csv file', () => {
     it('should email a csv file', (done) => {
@@ -263,8 +258,43 @@ describe('RESTful API', function() {
           expect(err).to.eql(null);
           expect(res.text).to.eql('Email sent');
           done();
-        })
-    })
-  })
+        });
+    });
+  });
+
+  describe('Archiving session data', () => {
+    it('should return and array of archived data', (done) => {
+      chai.request('localhost:3000')
+        .get('/admin/archive')
+        .set('authorization', token)
+        .end((err, res) => {
+          expect(err).to.eql(null);
+          expect(Array.isArray(res.body)).to.eql(true);
+          done();
+        });
+    });
+
+    it('should add session data to archive collection', (done) => {
+      chai.request('localhost:3000')
+        .post('/admin/archive')
+        .set('authorization', token)
+        .end((err, res) => {
+          expect(err).to.eql(null);
+          expect(res.body).to.have.property('_id');
+          done();
+        });
+    });
+
+    it('should delete archive collection', (done) => {
+      chai.request('localhost:3000')
+        .del('/admin/archive')
+        .set('authorization', token)
+        .end((err, res) => {
+          expect(err).to.eql(null);
+          expect(res.text).to.eql('Archive emptied');
+          done();
+        });
+    });
+  });
 
 });

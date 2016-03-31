@@ -51,7 +51,7 @@ module.exports = (router, models) => {
         } // if
         req.body.subjects.forEach(function(sub) {
           subject.subjects.push(sub);
-        })
+        });
         subject.save(function(err) {
           if(err) return res.send(err);
           res.json({

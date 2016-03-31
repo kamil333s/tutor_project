@@ -1,5 +1,4 @@
 'use strict';
-let cookieParser = require('cookie-parser');
 
 
 module.exports = (router, models) => {
@@ -20,7 +19,7 @@ module.exports = (router, models) => {
   router.post('/login', (req, res) => {
 
     let authorizationArray = req.headers.authorization.split(' ');
-    let method = authorizationArray[0];
+    // let method = authorizationArray[0];
     let base64ed = authorizationArray[1];
     let authArray = new Buffer(base64ed, 'base64').toString().split(':');
     let name = authArray[0];
@@ -30,9 +29,7 @@ module.exports = (router, models) => {
       if (user.length == 0) {
         return res.json({status: 'failure', message: 'Invalid username!'});
       }
-      // console.log('user:', user);
       let valid = user[0].compareHash(password);
-      // console.log('Valid: ', valid);
       if (!valid) {
         return res.json({status: 'failure', message: 'Invalid password!'});
       }

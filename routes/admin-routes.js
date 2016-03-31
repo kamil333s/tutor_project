@@ -97,7 +97,7 @@ module.exports = (router, models) => {
       Archive.find({}, (err, data) => {
         if(err) res.send(err);
         res.json(data);
-      })
+      });
     })
     .post((req, res) => {
       Session.find({}, (err, data) => {
@@ -105,15 +105,15 @@ module.exports = (router, models) => {
         var sessionArr = new Archive();
         data.forEach((session) => {
           sessionArr.archive.push(session);
-        })
+        });
         sessionArr.save();
-        res.json(sessionArr)
+        res.json(sessionArr);
       });
     })
     .delete((req, res) => {
-      Archive.remove({}, (err, data) => {
+      Archive.remove({}, (err) => {
         if(err) res.send(err);
         res.send('Archive emptied');
-      })
-    })
+      });
+    });
 }

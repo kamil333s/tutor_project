@@ -25,7 +25,6 @@ module.exports = (router, models) => {
           res.json({message: 'You are already in the queue!'});
         } else {
           var d = new Date();
-          var sessionObj = req.body;
           req.body.timeIn = d;
           req.body.timeOut = '';
           var newSession = new Session(req.body);
@@ -74,7 +73,7 @@ module.exports = (router, models) => {
         }// if
         res.json(list);
       }); // find
-    })
+    });
 
   router.route('/tables')
     .get((req, res) => {
@@ -84,5 +83,5 @@ module.exports = (router, models) => {
         }// if
         res.json(list);
       }); // find
-    })
+    });
 }
