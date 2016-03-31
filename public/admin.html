@@ -167,7 +167,7 @@
 
     $('#updateSubjects').on('click', function(e) {
       e.preventDefault();
-      var text = $('#inputSubjects').val().split(' ');
+      var text = $('#inputSubjects').val().split(',');
       console.log('Contents: '+text);
       $.ajax({
         headers: {'Authorization': localStorage.token},
@@ -179,10 +179,10 @@
         location.reload();
       ;})
     })
-
+    // TODO: filter out empty strings
     $('#updateTables').on('click', function(e) {
       e.preventDefault();
-      var text = $('#inputTables').val().split(' ');
+      var text = $('#inputTables').val().split(',');
       console.log('Contents: '+text);
       $.ajax({
         headers: {'Authorization': localStorage.token},
