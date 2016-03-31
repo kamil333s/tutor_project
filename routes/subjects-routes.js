@@ -13,7 +13,7 @@ module.exports = (router, models) => {
       }); // find
     })
     .post((req, res) => {
-      Subject.count({}, (err, subjects) => {
+      Subject.count({subjects: req.params.subjects}, (err, subjects) => {
         if (err) {
           return res.send(err);
         } else {

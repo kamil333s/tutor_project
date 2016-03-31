@@ -23,7 +23,7 @@ module.exports = (router, models) => {
             res.json({error: err});
           }// if
           defaults.tables = list;
-          res.render('admin');
+          res.json(defaults);
         });// Table.find
       });// Subject.find
     })
@@ -36,6 +36,8 @@ module.exports = (router, models) => {
         res.json(sessions);
       });// find
     });
+
+  
 
   router.route('/users')
     .get((req, res) => {

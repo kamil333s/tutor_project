@@ -123,7 +123,6 @@ describe('RESTful API', function() {
         .set('authorization', token)
         .send({tables: ['A7']})
         .end((err, res) => {
-          // console.log(res.body);
           expect(err).to.eql(null);
           expect(res.body).to.have.property('_id');
           done();
@@ -140,6 +139,7 @@ describe('RESTful API', function() {
           done();
         })
     });
+  })
 
   describe('Create a table Id', () => {
 
@@ -165,67 +165,106 @@ describe('RESTful API', function() {
           done();
         })
     });
+
+    it ('should delete tables', function(done) {
+      chai.request('localhost:3000')
+        .del('/admin/tables')
+        .set('authorization', token)
+        .end((err, res) => {
+          expect(err).to.eql(null);
+          expect(res.text).to.eql('Tables deleted!');
+          done();
+        })
+    });
   })
 
 
-  //
-  //   it ('should delete tables', function(done) {
-  //     chai.request('localhost:3000')
-  //       .del('/admin/tables')
-  //       .end((err, res) => {
-  //         expect(err).to.eql(null);
-  //         expect(res.text).to.eql('Tables deleted!');
-  //         done();
-  //       })
-  //   });
-  //
-  // })
-  //
-  // describe('Subjects routes', function() {
-  //
-  //   it ('should create a subject ', function(done) {
-  //     chai.request('localhost:3000')
-  //       .post('/admin/subjects')
-  //       .send({subjects: 'Algebra'})
-  //       .end((err, res) => {
-  //         subjectsId = res.body._id;
-  //         expect(err).to.eql(null);
-  //         expect(res.body).to.have.property('subjects');
-  //         done();
-  //       })
-  //   });
-  //
-  //   it ('should return an array of subjects ', function(done) {
-  //     chai.request('localhost:3000')
-  //       .get('/admin/subjects')
-  //       .end((err, res) => {
-  //         expect(err).to.eql(null);
-  //         expect(Array.isArray(res.body)).to.eql(true);
-  //         done();
-  //       })
-  //   });
-  //
-  //   it ('should update a subject ', function(done) {
-  //     chai.request('localhost:3000')
-  //       .put('/admin/subjects/'+subjectsId)
-  //       .send({subjects: 'Statistics'})
-  //       .end((err, res) => {
-  //         expect(err).to.eql(null);
-  //         expect(res.body.message).to.eql('Subject updated');
-  //         done();
-  //       })
-  //   });
-  //
-  //   it ('should delete a subject ', function(done) {
-  //     chai.request('localhost:3000')
-  //       .del('/admin/subjects')
-  //       .end((err, res) => {
-  //         expect(err).to.eql(null);
-  //         expect(res.text).to.eql('Subjects deleted!');
-  //         done();
-  //       })
-  //   });
-  //
+
+  describe('Subjects routes', function() {
+
+    beforeEach((done) => {
+      chai.request('localhost:3000')
+        .post('/admin/subjects')
+        .set('authorization', token)
+        .send({subjects: 'Algebra'})
+        .end((err, res) => {
+          subjectsId = res.body._id;
+          done();
+      })
+    })
+
+    it ('should create a subject ', function(done) {
+      chai.request('localhost:3000')
+        .post('/admin/subjects')
+        .set('authorization', token)
+        .send({subjects: ['Math']})
+        .end((err, res) => {
+          expect(err).to.eql(null);
+          expect(res.body).to.have.property('subjects');
+          done();
+        })
+    });
+
+    it ('should return an array of subjects ', function(done) {
+      chai.request('localhost:3000')
+        .get('/admin/subjects')
+        .set('authorization', token)
+        .end((err, res) => {
+          expect(err).to.eql(null);
+          expect(Array.isArray(res.body)).to.eql(true);
+          done();
+        })
+    });
+
+    it ('should update a subject ', function(done) {
+      chai.request('localhost:3000')
+        .put('/admin/subjects/'+subjectsId)
+        .set('authorization', token)
+        .send({subjects: ['Statistics']})
+        .end((err, res) => {
+          expect(err).to.eql(null);
+          expect(res.body.message).to.eql('Subject updated');
+          done();
+        })
+    });
+
+    it ('should delete a subject ', function(done) {
+      chai.request('localhost:3000')
+        .del('/admin/subjects')
+        .set('authorization', token)
+        .end((err, res) => {
+          expect(err).to.eql(null);
+          expect(res.text).to.eql('Subjects deleted!');
+          done();
+        })
+    });
+
+  })
+
+  describe('Download sessions to csv file', () => {
+    it('should download a csv file', (done) => {
+      chai.request('localhost:3000')
+        .get('/admin/downloads')
+        .set('authorization', token)
+        .end((err, res) => {
+          expect(err).to.eql(null);
+          expect(res.text).to.eql('File exported');
+          done();
+        })
+    })
+  })
+
+  describe('Email sessions data in csv file', () => {
+    it('should email a csv file', (done) => {
+      chai.request('localhost:3000')
+        .get('/admin/email')
+        .set('authorization', token)
+        .end((err, res) => {
+          expect(err).to.eql(null);
+          expect(res.text).to.eql('Email sent');
+          done();
+        })
+    })
   })
 
 });

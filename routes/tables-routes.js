@@ -16,7 +16,6 @@ module.exports = (router, models) => {
       // Create tables
 
       Table.count({tables: req.body.tables}, (err, tables) => {
-        console.log(tables);
         if (err) {
           return res.send(err);
         } else {
