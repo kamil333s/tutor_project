@@ -17,5 +17,14 @@
     </table>
     <script type="text/javascript" src="./js/jquery.js"></script>
     <script type="text/javascript" src="./js/display.js"></script>
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+      var socket = io();
+      
+      socket.on('newSession', function(msg){
+        console.log('Detected newSession!');
+        location.reload();
+      });
+    </script>
 </body>
 </html>

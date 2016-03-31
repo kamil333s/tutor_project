@@ -5,16 +5,33 @@
 </head>
 <body>
 
-<form name='session' action='http://localhost:3000/sessions' method='post' enctype="application/json">
+<form name='session'  >
 Subject: <select name='subject' id='subject'>
 </select><br/>
 
 Table number: <select name='table' id="table">
 </select><br/>
-<input type='submit' value='Submit'/>
+<input id='submitButton' type='submit' value='Submit'/>
 </form>
 
-    <script type="text/javascript" src="./js/jquery.js"></script>
-    <script type="text/javascript" src="./js/student.js"></script>
+<script type="text/javascript" src="./js/jquery.js"></script>
+<script type="text/javascript" src="./js/student.js"></script>
+<!-- <script type="text/javascript" src="./js/separate.js"></script> -->
+<script type="text/javascript" src="./js/socket.io.js"></script>
+<script>
+  var socket = io();
+  $('#submitButton').click(function(evt) {
+      evt.preventDefault();
+      var formData = {"subject":$('#subject').val(), "table":$('#table').val()};
+      $.post('http://localhost:3000/sessions', formData, function(data) {
+        if (data.status == 200) {
+          socket.emit('echo', 'Echo!');
+          console.log(data);
+        } else {
+          console.log(data);
+        }
+      });
+    });
+    </script>
 </body>
 </html>

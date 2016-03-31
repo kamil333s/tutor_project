@@ -20,7 +20,7 @@ module.exports = (router, models) => {
           res.json({error: err});
         }// if (err)
         if (sessions > 0) {
-          res.json({message: 'You are already in the queue!'});
+          res.json({message: 'You are already in the queue!', status:418});
         } else {
           var d = new Date();
           var sessionObj = req.body;
@@ -31,7 +31,8 @@ module.exports = (router, models) => {
             if (err) {
               res.json(err.toString());
             } else {
-              res.json(session);
+              console.log("Saved!");
+              res.send({message:'You have been added to the queue.', status:200});
             }// if (err)
           });// save
         }// if (sessions > 0)
@@ -56,13 +57,13 @@ module.exports = (router, models) => {
     })
     .delete((req, res) => {
       // Delete a session from the queue
-      Session.findById(req.params.id, (err, user) => {
+      Session.findById(req.params.id, (err, session) => {
         if (err) {
           res.send(err);
         }// if
-        Session.remove((err, user) => {
+        Session.remove((err, session) => {
           res.json({'message': 'session removed'});
         });// remove
       });// findById
     });
-}
+};

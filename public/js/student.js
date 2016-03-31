@@ -15,7 +15,6 @@ $(document).ready(function(){
             var trHTML = '';
             
             for (var i=0; i < data[0].subjects.length;i++) {
-            console.log(data[0].subjects[i]);
                 // delButton = '<button type="button" class="removeSession" id="' + data[i]._id + '">Remove</button>'
                 trHTML += '<option value="' + data[0].subjects[i] + '">' + data[0].subjects[i] + '</option>"' ;
             }// for
