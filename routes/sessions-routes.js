@@ -65,7 +65,7 @@ module.exports = (router, models) => {
         });// remove
       });// findById
     });
-};
+
 
   router.route('/subjects')
     .get((req, res) => {
@@ -75,7 +75,7 @@ module.exports = (router, models) => {
         }// if
         res.json(list);
       }); // find
-    });
+    });// get
 
   router.route('/tables')
     .get((req, res) => {
@@ -85,5 +85,5 @@ module.exports = (router, models) => {
         }// if
         res.json(list);
       }); // find
-    });
-}
+    });// get
+}// exports

@@ -41,12 +41,12 @@ app.use(bodyParser.urlencoded({ extended: true}));
 app.use(bodyParser.json());
 app.use(publicRouter);
 app.use(sessionsRouter);
+// app.use(auth);
+app.use('/admin', adminRouter, subjectsRouter,  tablesRouter);
 app.use(function(req,res,next){
     req.io = io;
     next();
 });
-app.use(auth);
-app.use('/admin', adminRouter, subjectsRouter,  tablesRouter);
 
 
 // var io = require('socket.io').listen(app.listen(3000));
