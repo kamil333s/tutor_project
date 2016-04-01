@@ -33,7 +33,7 @@ module.exports = (router, models) => {
               res.json(err.toString());
             } else {
               console.log("Saved!");
-              res.send({message:'You have been added to the queue.', status:200});
+              res.json({message:'You have been added to the queue.', status:200, data: session});
             }// if (err)
           });// save
         }// if (sessions > 0)
@@ -47,6 +47,7 @@ module.exports = (router, models) => {
         if (err) {
           res.json(err.toString());
         } else {
+
           res.json({
             message: 'Updated session',
             data: session
