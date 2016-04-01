@@ -14,10 +14,10 @@
   </nav>
 <table>
     <tr>
-      <td colspan=2> Tutor Queue </td>
+      <td colspan=2>Tutor Queue</td>
     </tr>
     <tr>
-      <td>  </td>
+      <td><span id='span1'></span></td>
       <td>  </td>
     </tr>
 </table>
@@ -33,6 +33,10 @@
       socket.on('newSession', function(msg){
         console.log('Detected newSession!');
         location.reload();
+      });
+      socket.on('bark', function(msg){
+        $("#span1").text(msg);
+
       });
     </script>
 </body>

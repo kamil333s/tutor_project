@@ -22,6 +22,10 @@ io.sockets.on('connection', function (socket) {
       console.log('recieved echo!!');
       io.sockets.emit('newSession', data);
     });
+    socket.on('newMessage', function (data) {
+      console.log('bark!');
+      io.sockets.emit('bark', data);
+    });
 });
 
 require('./routes/login')(publicRouter, models);

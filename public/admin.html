@@ -2,8 +2,7 @@
 <html>
   <head>
     <meta charset="utf-8">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.2/jquery.min.js"></script>
-    <title>Admin</title>
+     <title>Admin</title>
     <style media="screen">
       nav li { display: inline; }
     </style>
@@ -32,15 +31,9 @@
 
       </ul>
 
-
-
-
-
       Enter Subject: <input type="text" id="inputSubjects">
       <button id="postSubjects">SUBMIT</button>
       <button id="updateSubjects">UPDATE</button><br><br>
-
-
 
       Enter Table: <input type="text" id="inputTables">
       <button id="postTables">SUBMIT</button>
@@ -51,7 +44,6 @@
       <ul id="userDiv">
 
       </ul>
-
 
       Enter Username: <input type="text" id="inputUser">
       Enter Password: <input type="text" id="inputPassword">
@@ -64,9 +56,12 @@
       <button id="archiveData">ARCHIVE</button>
 
 
+      <br/>Enter message: <input type="text" id="inputMessage">
+      <button id="sendMessage">Send</button>
 
-
-
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.2/jquery.min.js"></script>
+  <script type="text/javascript" src="./js/socket.io.js"></script>
+  
   <script>
   $(document).ready(function(){
     var subjectsId;
@@ -228,47 +223,45 @@
       })
     })
 
-
-
-      $.ajax({
-        headers: {'Authorization': localStorage.token},
-        method: 'GET',
-        url: '/admin/subjects'
-      }).done(function(data) {
-        data[0].subjects.forEach(function(sub) {
-          $('#subDiv').append('<li>'+sub+'</li>');
-        })
-
-        subjectsId = data[0]._id;
+    $.ajax({
+      headers: {'Authorization': localStorage.token},
+      method: 'GET',
+      url: '/admin/subjects'
+    }).done(function(data) {
+      data[0].subjects.forEach(function(sub) {
+        $('#subDiv').append('<li>'+sub+'</li>');
       })
+      subjectsId = data[0]._id;
+    })
 
-
-
-      $.ajax({
-        headers: {'Authorization': localStorage.token},
-        method: 'GET',
-        url: '/admin/tables'
-      }).done(function(data) {
-        data[0].tables.forEach(function(tab) {
-          $('#tableDiv').append('<li>'+tab+'</li>');
-        })
-
-        tablesId = data[0]._id;
+    $.ajax({
+      headers: {'Authorization': localStorage.token},
+      method: 'GET',
+      url: '/admin/tables'
+    }).done(function(data) {
+      data[0].tables.forEach(function(tab) {
+        $('#tableDiv').append('<li>'+tab+'</li>');
       })
+      tablesId = data[0]._id;
+    })
 
-      $.ajax({
-        headers: {'Authorization': localStorage.token},
-        method: 'GET',
-        url: '/admin/users'
-      }).done(function(data) {
-        data.forEach((obj) => {
-          $('#userDiv').append('<li>'+obj.name+'</li>')
-        })
-
-        console.log(data);
+    $.ajax({
+      headers: {'Authorization': localStorage.token},
+      method: 'GET',
+      url: '/admin/users'
+    }).done(function(data) {
+      data.forEach((obj) => {
+        $('#userDiv').append('<li>'+obj.name+'</li>')
       })
+      console.log(data);
+    })
 
-
+    // Send message to clients
+    var socket = io();
+    $('#sendMessage').on('click', function(e) {
+      e.preventDefault();
+      socket.emit('newMessage', $('#inputMessage').val());
+    }); 
 
   });
   </script>

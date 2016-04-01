@@ -13,7 +13,7 @@
     <li><a href="admin.html">Admin</a></li>
     <li><a href="login.html">Login</a></li>
   </nav>
-
+<div id="Messenger"><span id="message"></span></div>
 <form name='session'  >
 Subject: <select name='subject' id='subject'>
 </select><br/>
@@ -38,9 +38,13 @@ Table number: <select name='table' id="table">
           console.log(data);
         } else {
           console.log(data);
-        }
-      });
-    });
+        }// if
+      });// post
+    });// click
+
+      socket.on('bark', function(msg){
+        $("#message").text(msg);
+      });// bark
     </script>
 </body>
 </html>
