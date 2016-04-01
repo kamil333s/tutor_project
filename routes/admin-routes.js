@@ -101,19 +101,36 @@ module.exports = (router, models) => {
     })
     .post((req, res) => {
       Session.find({}, (err, data) => {
-        if(err) res.send(err);
-        var sessionArr = new Archive();
-        data.forEach((session) => {
-          sessionArr.archive.push(session);
-        });
-        sessionArr.save();
-        res.json(sessionArr);
-      });
-    })
+        if(err) {
+          res.send(err);
+        } else {
+          var sessionArr = new Archive();
+          data.forEach((session) => {
+            sessionArr.archive.push(session);
+          });// forEach
+          sessionArr.save(function (err) {
+            if (err) {
+              return res.send(err);
+            } else {
+              Session.remove({}, (err) => {
+                if(err) {
+                  res.send(err);
+                } else {
+                  res.json('Archive complete');
+                }// if
+              });// remove
+            }// if
+          });// save
+        }// if
+      });// find
+    })// post
     .delete((req, res) => {
       Archive.remove({}, (err) => {
-        if(err) res.send(err);
-        res.send('Archive emptied');
-      });
-    });
-}
+        if(err) {
+          res.send(err);
+        } else {
+          res.send('Archive emptied');
+        }// if
+      });// remove
+    });// delete
+}// exports
