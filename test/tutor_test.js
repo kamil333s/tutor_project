@@ -280,7 +280,7 @@ describe('RESTful API', function() {
         .set('authorization', token)
         .end((err, res) => {
           expect(err).to.eql(null);
-          expect(res.body).to.have.property('_id');
+          expect(res.body).to.equal('Archive complete');
           done();
         });
     });
