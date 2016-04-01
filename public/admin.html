@@ -51,8 +51,9 @@
       <button id="postUser">ADD</button>
 
       <h1>Export Session Data as CSV file</h1>
+      Enter Email: <input type="text" id="inputEmail">
+      <button id="emailData">EMAIL</button><br>
       <button id="downloadData">DOWNLOAD</button>
-      <button id="emailData">EMAIL</button>
       <button id="archiveData">ARCHIVE</button>
 
 
@@ -61,7 +62,7 @@
 
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.2/jquery.min.js"></script>
   <script type="text/javascript" src="./js/socket.io.js"></script>
-  
+
   <script>
   $(document).ready(function(){
     var subjectsId;
@@ -203,9 +204,12 @@
 
     $('#emailData').on('click', (e) => {
       e.preventDefault();
+      var email = $('#inputEmail').val();
+      console.log(email);
       $.ajax({
         headers: {'Authorization': localStorage.token},
-        method: 'GET',
+        method: 'POST',
+        data: {email:email},
         url: '/admin/email'
       }).done((data) => {
         console.log(data);
@@ -261,7 +265,7 @@
     $('#sendMessage').on('click', function(e) {
       e.preventDefault();
       socket.emit('newMessage', $('#inputMessage').val());
-    }); 
+    });
 
   });
   </script>

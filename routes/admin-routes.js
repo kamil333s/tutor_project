@@ -73,17 +73,20 @@ module.exports = (router, models) => {
     });
 
   router.route('/email')
-    .get((req, res) => {
+    .post((req, res) => {
+      console.log(req.body);
       var fields = ['timeIn', 'timeOut', 'subject', 'table'];
       Session.find({}, (err, data) => {
         if(err) return res.send(err);
         json2csv({ data: data, fields: fields }, (err, csv) => {
           if (err) console.log(err);
+
           sendgrid.send({
-            to:       'javascriptdeveloper321@gmail.com',
+            to:       req.body.email,
             from:     'no-replay@example.com',
             subject:  'Export CSV Raw Data',
-            text:     csv
+            text:     'Here is a CSV file of the sessions data.',
+            files: [{filename: 'sessions.csv', content: csv}]
           }, function(err, json) {
             if (err) { return console.error(err); }
           });
