@@ -26,11 +26,11 @@
       // var password;
       $('#login').on('click', (e) => {
         e.preventDefault();
-        console.log('Button Clicked!');
+        // console.log('Button Clicked!');
         var username = $('#userName').val();
         var password = $('#userPassword').val();
-        console.log('Username: '+ username);
-        console.log('userPassword: '+ password);
+        // console.log('Username: '+ username);
+        // console.log('userPassword: '+ password);
         $.ajax(
           {
             type: 'POST',
@@ -40,8 +40,8 @@
             console.log(data);
             localStorage.token = data.token;
           })
-          console.log('Username: '+ username);
-          console.log('userPassword: '+ password);
+          // console.log('Username: '+ username);
+          // console.log('userPassword: '+ password);
       })
 
     })
