@@ -252,8 +252,9 @@ describe('RESTful API', function() {
   describe('Email sessions data in csv file', () => {
     it('should email a csv file', (done) => {
       chai.request('localhost:3000')
-        .get('/admin/email')
+        .post('/admin/email')
         .set('authorization', token)
+        .send({email:'abc@123.com'})
         .end((err, res) => {
           expect(err).to.eql(null);
           expect(res.text).to.eql('Email sent');
